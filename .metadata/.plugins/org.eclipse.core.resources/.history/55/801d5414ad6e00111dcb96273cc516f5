@@ -1,0 +1,16 @@
+
+public class Roman {
+
+	public static String convert(int arabic) {
+		String roman = "";
+		if (arabic == 4){
+			roman = "IV";
+		}
+		while(arabic > 0 && arabic != 4) {
+			roman += "I";
+			arabic --;
+		}
+		return roman;
+	}
+
+}

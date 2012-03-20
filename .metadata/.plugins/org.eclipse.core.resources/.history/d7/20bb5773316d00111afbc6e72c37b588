@@ -1,0 +1,16 @@
+module vworld {
+
+	struct User {
+	
+	};
+	
+	struct Room {
+	
+	};
+	
+	interface WorldManager {
+		String register(
+		
+	};
+	
+};

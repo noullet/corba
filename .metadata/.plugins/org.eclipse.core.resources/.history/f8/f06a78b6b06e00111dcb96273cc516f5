@@ -1,0 +1,27 @@
+import java.util.Map;
+
+
+public class Roman {
+
+	public static String convert(int arabic) {
+		String roman = "";
+		Map associations = new HashMap<Integer, String>();
+		
+		if (arabic >= 5) {
+			roman += "V";
+			arabic -= 5;
+		}
+		if (arabic >= 4) {
+			roman += "IV";
+			arabic -= 4;
+		}	
+		while(arabic > 0) {
+			if (arabic >= 1) {
+				roman += "I";
+				arabic --;
+			}
+		}
+		return roman;
+	}
+
+}

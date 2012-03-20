@@ -1,0 +1,27 @@
+module vworld {
+
+	interface User;
+	
+	struct Message {
+		User sender;
+		User receiver;
+		string content;
+	};
+	
+	interface WorldManager {
+		string register(in string login);
+		Room login(in string login, in string password);		
+	};
+	
+	interface User {
+		readonly attribute string login;
+		void notifyMessage(in Message message,  	
+	};
+		
+	interface Room {
+		void connect(in User user);		
+	};
+	
+
+	
+};

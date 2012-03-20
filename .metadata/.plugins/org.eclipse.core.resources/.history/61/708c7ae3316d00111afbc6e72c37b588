@@ -1,0 +1,18 @@
+module vworld {
+
+	
+	interface WorldManager {
+		string register(in string login);
+		Room login(in string login, in string password);		
+	};
+	
+	interface Room {
+		void connect(in User user);		
+	};
+	
+	interface User {
+		 readonly attribute string login;
+		 	
+	};
+	
+};

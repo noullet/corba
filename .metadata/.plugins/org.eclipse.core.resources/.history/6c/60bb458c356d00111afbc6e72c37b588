@@ -1,0 +1,7 @@
+package server;
+
+import interfaces.WorldManager;
+
+public class WorldManagerImpl implements WorldManager {
+
+}

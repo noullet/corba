@@ -1,0 +1,17 @@
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+
+public class RomanTest {
+
+	@Test
+	public void convertUnTest() {
+		assertEquals("I", Roman.convert(1));
+	}
+	public void convertDeuxTest() {
+		assertEquals("II", Roman.convert(2));
+	}
+
+}
+

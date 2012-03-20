@@ -1,0 +1,44 @@
+module vworld {
+
+	interface User;
+	interface Room;
+	
+	enum MessageType {
+		BROADCAST, SINGLECAST
+	};
+	
+	struct Message {
+		User sender;
+		User receiver;
+		string content;
+		MessageType type;
+	};
+	
+	typedef sequence<User> Users;
+	typedef sequence<Room> Rooms;	
+	
+	interface WorldManager {
+		readonly attribute Rooms rooms;	
+	
+		string register(in string login);
+		Room login(in string login, in string password);
+		Room changeRoom(in User user, in Room currentRoom, in Room newRoom);		
+	};
+	
+	interface User {
+		readonly attribute string login;
+		
+		void notifyMessage(in Message message);
+		void notifyConnection(in User user);	
+	};
+		
+	interface Room {
+		readonly attribute Users users;
+		
+		void connect(in User user);		
+		void sendMessage(in Message message);
+	};
+	
+
+	
+};

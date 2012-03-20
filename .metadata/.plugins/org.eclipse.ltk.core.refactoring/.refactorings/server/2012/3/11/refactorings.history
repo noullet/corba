@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;org.vworld.server&apos; to &apos;server&apos;&#x0D;&#x0A;- Original project: &apos;server&apos;&#x0D;&#x0A;- Original element: &apos;server/src/org.vworld.server&apos;&#x0D;&#x0A;- Renamed element: &apos;server/src/server&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;org.vworld.server&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src&lt;org.vworld.server" name="server" qualified="false" references="true" stamp="1331661003817" textual="false" version="1.0"/>
+</session>
