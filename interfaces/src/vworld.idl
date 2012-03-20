@@ -1,12 +1,34 @@
 module interfaces {
 
-	interface User;
-	interface Room;
-	
 	enum MessageType {
 		BROADCAST, SINGLECAST
 	};
 	
+	enum UserSize {
+		NAIN, PETIT, MOYEN, GRAND, GEANT
+	};
+	
+	enum UserMood {
+		CONTENT, HILARE, TRISTE, INQUIET, EFFRAYE
+	};
+	
+	enum UserSex {
+		MALE, FEMALE
+	};
+	
+	enum Orientation {
+		NORD, SUD, EST, OUEST
+	};
+	
+	interface Room;
+
+	struct User {
+		string login;
+		UserSize size;
+		UserMood mood;
+		UserSex sex;
+	};
+		
 	struct Message {
 		User sender;
 		User receiver;
@@ -14,31 +36,46 @@ module interfaces {
 		MessageType type;
 	};
 	
+	typedef sequence<Room> Rooms;
 	typedef sequence<User> Users;
-	typedef sequence<Room> Rooms;	
-	
-	interface WorldManager {
-		readonly attribute Rooms rooms;	
-	
-		string register(in string login);
-		Room login(in string login, in string password);
-		Room changeRoom(in User user, in Room currentRoom, in Room newRoom);		
+	typedef sequence<Message> Messages;
+				
+	struct LoginDTO {
+		User user;
+		Room room;
+		Messages pendingMessages;
 	};
 	
-	interface User {
+	
+	interface Admin {
+		readonly attribute Rooms rooms;
+	};
+	 	
+	interface UserService {
 		readonly attribute string login;
 		
 		void notifyMessage(in Message message);
-		void notifyConnection(in User user);	
-	};
-		
-	interface Room {
-		readonly attribute Users users;
-		
-		void connect(in User user);		
-		void sendMessage(in Message message);
+		void notifyConnection(in User user);
+		void notifyChangeSize(in User user, in UserSize size);	
+		void notifyChangeMood(in User user, in UserMood mood);	
+		void notifyChangeSex(in User user, in UserSex sex);	
 	};
 	
-
+	interface WorldManager {
+		string register(in string login);
+		LoginDTO login(in string login, in string password, in UserService userService);
+		Admin loginAdmin(in string login, in string password);
+	};
+			
+	interface Room {
+		readonly attribute Users users;
+			
+		void sendMessage(in Message message);
+		Room changeRoom(in User user, in Orientation orientation);
+		void changePassword(in User user, in string password);		
+		void changeSize(in User user, in UserSize size);	
+		void changeMood(in User user, in UserMood mood);	
+		void changeSex(in User user, in UserSex sex);	
+	};
 	
 };
