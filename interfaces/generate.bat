@@ -1,2 +1,2 @@
 rd /s /q src\interfaces
-idlj -td src src\vworld.idl
+idlj -td src -f all src\vworld.idl
