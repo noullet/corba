@@ -3,6 +3,7 @@ package server;
 import interfaces.Admin;
 import interfaces.LoginDTO;
 import interfaces.Message;
+import interfaces.RoomHelper;
 import interfaces.User;
 import interfaces.UserMood;
 import interfaces.UserService;
@@ -39,8 +40,8 @@ public class WorldManagerImpl extends WorldManagerPOA {
 
 	@Override
 	public LoginDTO login(String login, String password, UserService userService) {
-		System.out.println("User " + login + " logged in");
 		User user = new User(login, UserSize.MOYEN, UserMood.CONTENT, UserSex.MALE);
+		System.out.println("User " + login + " logged in");
 		return new LoginDTO(user, rooms.get(0)._this(orb), new Message[0]);
 	}
 
