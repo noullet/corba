@@ -1,16 +1,12 @@
 package client;
 
-import java.util.Scanner;
-
 import interfaces.LoginDTO;
-import interfaces.Message;
-import interfaces.MessageType;
 import interfaces.Room;
-import interfaces.RoomHelper;
 import interfaces.User;
-import interfaces.UserHelper;
 import interfaces.UserMood;
 import interfaces.WorldManager;
+
+import java.util.Scanner;
 
 public class Client {
 
@@ -22,6 +18,7 @@ public class Client {
 		this.worldManager = worldManager;
 		login();
 		System.out.println("Login Successfull");
+		room.changeMood(user, UserMood.EFFRAYE);
 	}
 
 	private void login() {

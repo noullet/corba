@@ -39,7 +39,7 @@ public class Main {
 			NameComponent path[] = ncRef.to_name("Server");
 			ncRef.rebind(path, href);
 			System.out.println("Server ready and waiting ...");
-			doDBStuff();
+			// doDBStuff();
 			orb.run();
 		} catch (Exception e) {
 			System.err.println("ERROR: " + e);
