@@ -69,6 +69,7 @@ module interfaces {
 			
 	interface Room {
 		readonly attribute Users users;
+		readonly attribute string name;
 			
 		void sendMessage(in Message message);
 		Room changeRoom(in User user, in Orientation orientation);

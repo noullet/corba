@@ -37,7 +37,7 @@ public class RoomImpl extends RoomPOA {
 
 	@Override
 	public void changeSize(User user, UserSize size) {
-		user.size = size;		
+		user.size = size;
 	}
 
 	@Override
@@ -48,6 +48,12 @@ public class RoomImpl extends RoomPOA {
 	@Override
 	public void changeSex(User user, UserSex sex) {
 		user.sex = sex;
+	}
+
+	@Override
+	public String name() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
