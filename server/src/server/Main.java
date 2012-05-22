@@ -30,7 +30,7 @@ public class Main {
 			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 			rootpoa.the_POAManager().activate();
 			WorldManagerImpl server = new WorldManagerImpl();
-			server.setORB(orb);
+			server.initialiseOrb(orb);
 			// enregistrement de l’objet dans le naming service
 			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(server);
 			WorldManager href = WorldManagerHelper.narrow(ref);

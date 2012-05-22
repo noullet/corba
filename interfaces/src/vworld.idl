@@ -17,7 +17,7 @@ module interfaces {
 	};
 	
 	enum Orientation {
-		NORD, SUD, EST, OUEST
+		NORTH, SOUTH, EAST, WEST
 	};
 	
 	interface Room;
@@ -64,19 +64,21 @@ module interfaces {
 	interface WorldManager {
 		string register(in string login);
 		LoginDTO login(in string login, in string password, in UserService userService);
+	    Room changeRoom(in Room oldRoom, in User user, in Orientation orientation);
 		Admin loginAdmin(in string login, in string password);
 	};
 			
 	interface Room {
 		readonly attribute Users users;
 		readonly attribute string name;
+		readonly attribute short x;
+		readonly attribute short y;
 			
 		void sendMessage(in Message message);
-		Room changeRoom(in User user, in Orientation orientation);
-		void changePassword(in User user, in string password);		
-		void changeSize(in User user, in UserSize size);	
-		void changeMood(in User user, in UserMood mood);	
-		void changeSex(in User user, in UserSex sex);	
+		User changePassword(in User user, in string password);		
+		User changeSize(in User user, in UserSize size);	
+		User changeMood(in User user, in UserMood mood);	
+		User changeSex(in User user, in UserSex sex);
 	};
 	
 };
