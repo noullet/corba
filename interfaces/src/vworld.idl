@@ -71,8 +71,6 @@ module interfaces {
 	interface Room {
 		readonly attribute Users users;
 		readonly attribute string name;
-		readonly attribute short x;
-		readonly attribute short y;
 			
 		void sendMessage(in Message message);
 		User changePassword(in User user, in string password);		

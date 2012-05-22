@@ -15,11 +15,13 @@ public class RoomImpl extends RoomPOA {
 
 	private String name;
 	private List<User> users = new ArrayList<User>();
-	private short x;
-	private short y;
+	private int x;
+	private int y;
 
 	public RoomImpl(String name, int x, int y) {
 		this.name = name;
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -68,13 +70,11 @@ public class RoomImpl extends RoomPOA {
 		return name;
 	}
 
-	@Override
-	public short x() {
+	public int getX() {
 		return x;
 	}
 
-	@Override
-	public short y() {
+	public int getY() {
 		return y;
 	}
 }

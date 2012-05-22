@@ -99,12 +99,12 @@ public class WorldManagerImpl extends WorldManagerPOA {
 
 	@Override
 	public Room changeRoom(Room oldRoom, User user, Orientation orientation) {
-		RoomImpl roomImpl = getImplFromRoom(oldRoom);
-		int[] coordinates = ServerUtils.getNewCoordinates(roomImpl.x(), roomImpl.y(), orientation);
+		RoomImpl oldRoomImpl = getImplFromRoom(oldRoom);
+		int[] coordinates = ServerUtils.getNewCoordinates(oldRoomImpl.getX(), oldRoomImpl.getY(), orientation);
 		int x = coordinates[0];
 		int y = coordinates[1];
 		if (x < 0 || y < 0 || x >= rooms.size() || y >= rooms.get(x).size()) {
-			System.out.println("No room find");
+			System.out.println("No room found");
 			return oldRoom;
 		} else {
 			return getRoomFromPoa(rooms.get(x).get(y));
