@@ -43,7 +43,6 @@ public class RoomImpl extends RoomPOA {
 
 	@Override
 	public User changePassword(User user, String password) {
-		// TODO Auto-generated method stub
 		return user;
 	}
 
