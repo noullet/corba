@@ -1,0 +1,144 @@
+JFDML JFormDesigner: "5.1.0.0.51" Java: "1.7.0_01" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			name: "this"
+			"title": "PizzaChat"
+			add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+				name: "splitPane1"
+				"resizeWeight": 0.8
+				"enabled": false
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrollPane1"
+					add( new FormComponent( "javax.swing.JTextArea" ) {
+						name: "messageToSend"
+						addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "messageToSendKeyPressed", true ) )
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "left"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button1"
+					"text": "Envoyer"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "envoyerActionPerformed", true ) )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "right"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "South"
+			} )
+			add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+				name: "splitPane2"
+				"enabled": false
+				"resizeWeight": 0.8
+				"preferredSize": new java.awt.Dimension( 132, 46 )
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrollPane2"
+					add( new FormComponent( "javax.swing.JTextArea" ) {
+						name: "chatArea"
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "left"
+				} )
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrollPane3"
+					add( new FormComponent( "javax.swing.JList" ) {
+						name: "list1"
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "right"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
+			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuBar1"
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu1"
+					"text": "File"
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu2"
+					"text": "Room"
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu3"
+					"text": "Humeur"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "contentMenu"
+						"text": "Content"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "moodActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "tristeMenu"
+						"text": "Triste"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "moodActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "effrayeMenu"
+						"text": "Effrayé"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "moodActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "inquietMenu"
+						"text": "Inquiet"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "moodActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "hilareMenu"
+						"text": "Hilare"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "moodActionPerformed", true ) )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu4"
+					"text": "Taille"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "geantMenu"
+						"text": "Géant"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "tailleActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "grandMenu"
+						"text": "Grand"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "tailleActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "moyenMenu"
+						"text": "Moyen"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "tailleActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "petitMenu"
+						"text": "Petit"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "tailleActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "nainMenu"
+						"text": "Nain"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "tailleActionPerformed", true ) )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu5"
+					"text": "Sexe"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "hommeMenu"
+						"text": "Homme"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "sexeActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "femmeMenu"
+						"text": "Femme"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "sexeActionPerformed", true ) )
+					} )
+				} )
+			}
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 300 )
+		} )
+	}
+}

@@ -33,10 +33,10 @@ public class RoomImpl extends RoomPOA {
 	public void sendMessage(Message message) {
 		if (message.type.equals(MessageType._BROADCAST)) {
 			for (User user : this.users()) {
-				System.out.println("Broadcast Message not sended");
+				System.out.println("Broadcast Message not sended : " + message.content);
 			}
 		} else {
-			System.out.println("Singlecast Message not sended");
+			System.out.println("Singlecast Message not sended" + message.content);
 		}
 
 	}

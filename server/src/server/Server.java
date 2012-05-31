@@ -22,10 +22,10 @@ public class Server {
 		try {
 			orb = getOrb(args);
 			connection = getConnection();
-			db = new VworldFactory(connection);
-			if (shouldInitializeDB) {
-				initializeDB(db);
-			}
+			//db = new VworldFactory(connection);
+			//if (shouldInitializeDB) {
+				//initializeDB(db);
+			//}
 			System.out.println("Server ready and waiting ...");
 			orb.run();
 		} catch (Exception e) {

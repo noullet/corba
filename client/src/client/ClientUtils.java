@@ -12,6 +12,8 @@ public class ClientUtils {
 
 	private static final String TNAMESERV_COMPONENT = "WorldManager";
 
+	private static UserManager userManager;
+	
 	public static final WorldManager getWorldManager(String[] args) throws Exception {
 		// create and initialize the ORB
 		ORB orb = ORB.init(args, null);
@@ -23,6 +25,15 @@ public class ClientUtils {
 		NameComponent path[] = { nc };
 		WorldManager worldManager = WorldManagerHelper.narrow(ncRef.resolve(path));
 		return worldManager;
+	}
+	
+	protected static UserManager getUserManager(){
+		return userManager;
+	}
+	
+	protected static UserManager getUserManager(WorldManager worldManager){
+		userManager = new UserManager(worldManager);
+		return userManager;
 	}
 
 }

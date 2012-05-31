@@ -1,6 +1,8 @@
 package client;
 
 import interfaces.LoginDTO;
+import interfaces.Message;
+import interfaces.MessageType;
 import interfaces.Orientation;
 import interfaces.Room;
 import interfaces.User;
@@ -9,6 +11,7 @@ import interfaces.UserSex;
 import interfaces.UserSize;
 import interfaces.WorldManager;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserManager {
@@ -16,17 +19,22 @@ public class UserManager {
 	private WorldManager worldManager;
 	private User user;
 	private Room room;
+	private MainFrame mainFrame;
 
 	public UserManager(WorldManager worldManager) {
 		this.worldManager = worldManager;
 	}
 
 	public void run() {
-		login();
-		scenario();
+		this.mainFrame = new MainFrame();
+		LoginDialog loginDialog = new LoginDialog(this.mainFrame);
+		loginDialog.setVisible(true);
+		//login();
+		//scenario();
+		
 	}
 
-	private void login() {
+	private void login() {		
 		Scanner in = new Scanner(System.in);
 		System.out.print("Entrez votre login : ");
 		String login = in.nextLine();
@@ -36,6 +44,22 @@ public class UserManager {
 		LoginDTO loginDTO = worldManager.login(login, password, null);
 		this.user = loginDTO.user;
 		this.room = loginDTO.room;
+	}
+	
+	protected void loginFromFrame(String login, String password){
+		LoginDTO loginDTO = worldManager.login(login, password, null);
+		this.user = loginDTO.user;
+		this.room = loginDTO.room;	
+		Message message = new Message();
+		message.content = "Client connecté";
+		message.sender = this.user;
+		message.type = MessageType.BROADCAST;
+		this.mainFrame.setVisible(true);
+		ArrayList<String> listConnected = new ArrayList<String>();
+		listConnected.add(user.login);
+		this.mainFrame.initializeList(listConnected, this);		
+		//this.room.sendMessage(message);
+		scenario2();
 	}
 
 	private void scenario() {
@@ -54,24 +78,45 @@ public class UserManager {
 		changeRoom(Orientation.NORTH);
 		printInfo();
 	}
-
-	private void changeMood(UserMood mood) {
-		user = room.changeMood(user, mood);
+	
+	public void scenario2(){
+		this.notifyConnection(this.user);
+		Message message = new Message();
+		message.content = "Bonjour !";
+		message.sender = this.user;
+		message.type = MessageType.BROADCAST;
+		this.notifyMessage(message);
+		Message message2 = new Message();
+		message2.content = "Ca va ?";
+		message2.sender = this.user;
+		message2.type = MessageType.BROADCAST;
+		this.notifyMessage(message2);
+		this.notifyChangeMood(user, UserMood.EFFRAYE);
+		this.notifyChangeSex(user, UserSex.FEMALE);
+		this.notifyChangeSize(user, UserSize.NAIN);
 	}
 
-	private void changeSex(UserSex sex) {
+	protected void changeMood(UserMood mood) {
+		this.notifyChangeMood(user, mood);
+		user = room.changeMood(user, mood);
+		
+	}
+
+	protected void changeSex(UserSex sex) {
+		this.notifyChangeSex(user, sex);
 		user = room.changeSex(user, sex);
 	}
 
-	private void changeSize(UserSize size) {
+	protected void changeSize(UserSize size) {
+		this.notifyChangeSize(user, size);
 		user = room.changeSize(user, size);
 	}
 
-	private void changePassword(String password) {
+	protected void changePassword(String password) {
 		user = room.changePassword(user, password);
 	}
 
-	private void changeRoom(Orientation orientation) {
+	protected void changeRoom(Orientation orientation) {
 		room = worldManager.changeRoom(room, user, orientation);
 	}
 
@@ -82,5 +127,40 @@ public class UserManager {
 		System.out.println("-- Sex : " + user.sex.value());
 		System.out.println("-- Size : " + user.size.value());
 		System.out.println("-- Mood : " + user.mood.value());
+	}
+	
+	protected String getUsername(){
+		return this.user.login;
+	}
+	
+	protected void sendBroadCastMessage(String content){
+		Message message = new Message();
+		message.content = content;
+		message.sender = user;
+		message.type = MessageType.BROADCAST;
+		//this.room.sendMessage(message);
+		// A enlever
+		this.notifyMessage(message);
+		
+	}
+	
+	protected void notifyMessage(Message message){
+		this.mainFrame.newMessage(message.sender.login, message.content);
+	}
+	
+	protected void notifyConnection(User user){
+		this.mainFrame.newConnection(user.login);
+	}
+	
+	protected void notifyChangeSize(User user, UserSize userSize){
+		this.mainFrame.newSize(user.login, userSize);
+	}
+	
+	protected void notifyChangeSex(User user, UserSex userSex){
+		this.mainFrame.newSex(user.login, userSex);
+	}
+	
+	protected void notifyChangeMood(User user, UserMood userMood){		
+		this.mainFrame.newMood(user.login, userMood);
 	}
 }
