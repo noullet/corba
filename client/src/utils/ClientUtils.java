@@ -1,5 +1,7 @@
-package client;
+package utils;
 
+import interfaces.Room;
+import interfaces.User;
 import interfaces.WorldManager;
 import interfaces.WorldManagerHelper;
 
@@ -12,8 +14,6 @@ public class ClientUtils {
 
 	private static final String TNAMESERV_COMPONENT = "WorldManager";
 
-	private static UserManager userManager;
-	
 	public static final WorldManager getWorldManager(String[] args) throws Exception {
 		// create and initialize the ORB
 		ORB orb = ORB.init(args, null);
@@ -26,14 +26,13 @@ public class ClientUtils {
 		WorldManager worldManager = WorldManagerHelper.narrow(ncRef.resolve(path));
 		return worldManager;
 	}
-	
-	protected static UserManager getUserManager(){
-		return userManager;
-	}
-	
-	protected static UserManager getUserManager(WorldManager worldManager){
-		userManager = new UserManager(worldManager);
-		return userManager;
-	}
 
+	public static final void printInfo(Room room, User user) {
+		System.out.println("-----------------------");
+		System.out.println("User : " + user.login);
+		System.out.println("Room : " + room.name());
+		System.out.println("-- Sex : " + user.sex.value());
+		System.out.println("-- Size : " + user.size.value());
+		System.out.println("-- Mood : " + user.mood.value());
+	}
 }
