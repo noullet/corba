@@ -17,7 +17,7 @@ public class Client {
 		try {
 			// Lancement du client et récupération de la référence du serveur
 			orb = ORB.init(args, null);
-			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+			rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 			rootpoa.the_POAManager().activate();
 			WorldManager worldManager = retrieveWorldManager(orb);
 			userManager = new UserManager(worldManager);

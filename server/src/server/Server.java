@@ -16,7 +16,7 @@ public class Server {
 	private static ORB orb;
 	private static POA rootpoa;
 	private static VworldFactory db;
-	private static final boolean SHOULD_INITIALIZE_DB = true;
+	private static final boolean SHOULD_INITIALIZE_DB = false;
 
 	public static void main(String[] args) {
 		Connection connection = null;
@@ -29,7 +29,7 @@ public class Server {
 			}
 			// Enregistrement et lancement du serveur
 			orb = ORB.init(args, null);
-			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+			rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 			rootpoa.the_POAManager().activate();
 			ServerUtils.registerWorldManager(orb, rootpoa, new WorldManagerImpl());
 			System.out.println("Server ready and waiting ...");
