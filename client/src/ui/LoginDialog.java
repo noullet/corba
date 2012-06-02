@@ -43,7 +43,7 @@ public class LoginDialog extends JDialog {
 	private void okButtonActionPerformed(ActionEvent e) {
 		// TODO add your code here
 		String username = this.textField1.getText();
-		String password = this.passwordField1.getPassword().toString();
+		String password = new String(this.passwordField1.getPassword());
 		Client.getUserManager().loginFromFrame(username, password);
 		this.setVisible(false);
 	}

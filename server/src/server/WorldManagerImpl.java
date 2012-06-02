@@ -7,10 +7,7 @@ import interfaces.Orientation;
 import interfaces.Room;
 import interfaces.RoomHelper;
 import interfaces.User;
-import interfaces.UserMood;
 import interfaces.UserService;
-import interfaces.UserSex;
-import interfaces.UserSize;
 import interfaces.WorldManagerPOA;
 
 import java.util.ArrayList;
@@ -23,6 +20,7 @@ import org.omg.PortableServer.POAHelper;
 import org.omg.PortableServer.Servant;
 
 import utils.ServerUtils;
+import dao.UserDao;
 
 public class WorldManagerImpl extends WorldManagerPOA {
 
@@ -63,10 +61,13 @@ public class WorldManagerImpl extends WorldManagerPOA {
 
 	@Override
 	public LoginDTO login(String login, String password, UserService userService) {
-		User user = new User(login, UserSize.MOYEN, UserMood.CONTENT, UserSex.MALE);
-		System.out.println("User " + login + " logged in");
-		Room room = null;
-		room = getRoomFromPoa(rooms.get(0).get(0));
+		User user = UserDao.findByLoginAndPassword(login, password);
+		if (user != null) {
+			System.out.println("User " + login + " logged in");
+		} else {
+			System.out.println("User " + login + " cannot be logged in: wrong login or password");
+		}
+		Room room = getRoomFromPoa(rooms.get(0).get(0));
 		return new LoginDTO(user, room, new Message[0]);
 	}
 

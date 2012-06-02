@@ -1,8 +1,5 @@
 package server;
 
-import static utils.ServerUtils.getConnection;
-import static utils.ServerUtils.getOrb;
-import static utils.ServerUtils.initializeDB;
 import generated.VworldFactory;
 
 import java.sql.Connection;
@@ -10,20 +7,22 @@ import java.sql.SQLException;
 
 import org.omg.CORBA.ORB;
 
+import utils.ServerUtils;
+
 public class Server {
 
-	public static ORB orb;
-	public static VworldFactory db;
-	private static final boolean shouldInitializeDB = true;
+	private static ORB orb;
+	private static VworldFactory db;
+	private static final boolean SHOULD_INITIALIZE_DB = true;
 
 	public static void main(String[] args) {
 		Connection connection = null;
 		try {
-			orb = getOrb(args);
-			connection = getConnection();
+			orb = ServerUtils.getOrb(args);
+			connection = ServerUtils.getConnection();
 			db = new VworldFactory(connection);
-			if (shouldInitializeDB) {
-				initializeDB(db);
+			if (SHOULD_INITIALIZE_DB) {
+				ServerUtils.initializeDB(db);
 			}
 			System.out.println("Server ready and waiting ...");
 			orb.run();
@@ -39,5 +38,13 @@ public class Server {
 				}
 			}
 		}
+	}
+
+	public static ORB getOrb() {
+		return orb;
+	}
+
+	public static VworldFactory getDb() {
+		return db;
 	}
 }
