@@ -1,53 +1,36 @@
 package server;
 
+import static utils.ServerUtils.getImplFromRoom;
+import static utils.ServerUtils.getRoomFromPoa;
 import interfaces.Admin;
 import interfaces.LoginDTO;
 import interfaces.Message;
 import interfaces.Orientation;
 import interfaces.Room;
-import interfaces.RoomHelper;
 import interfaces.User;
 import interfaces.UserService;
 import interfaces.WorldManagerPOA;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.PortableServer.POA;
-import org.omg.PortableServer.POAHelper;
-import org.omg.PortableServer.Servant;
 
 import utils.ServerUtils;
+
+import com.google.common.collect.Table;
+
+import dao.RoomDao;
 import dao.UserDao;
 
 public class WorldManagerImpl extends WorldManagerPOA {
 
 	private ORB orb;
 	private POA rootpoa;
-	private List<List<RoomImpl>> rooms;
-	public static final int X_ROOMS = 3;
-	public static final int Y_ROOMS = 3;
+	private Table<Integer, Integer, RoomImpl> rooms;
 
-	public WorldManagerImpl() {
-		rooms = new ArrayList<List<RoomImpl>>();
-		for (int i = 0; i < X_ROOMS; i++) {
-			List<RoomImpl> roomsToAdd = new ArrayList<RoomImpl>();
-			for (int j = 0; j < Y_ROOMS; j++) {
-				roomsToAdd.add(new RoomImpl("Room " + i + "-" + j, i, j));
-			}
-			rooms.add(roomsToAdd);
-		}
-	}
-
-	public void initialiseOrb(ORB orb_val) {
-		orb = orb_val;
-		try {
-			rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-		} catch (InvalidName e) {
-			e.printStackTrace();
-		}
+	public WorldManagerImpl(ORB orb, POA rootpoa) {
+		this.orb = orb;
+		this.rootpoa = rootpoa;
+		rooms = RoomDao.findAllRooms();
 	}
 
 	public void shutdown() {
@@ -67,32 +50,10 @@ public class WorldManagerImpl extends WorldManagerPOA {
 		} else {
 			return null;
 		}
-		RoomImpl roomToConnect = rooms.get(0).get(0);
-		Room room = getRoomFromPoa(roomToConnect);
+		RoomImpl roomToConnect = rooms.get(0, 0);
+		Room room = getRoomFromPoa(rootpoa, roomToConnect);
 		roomToConnect.login(user, userService);
 		return new LoginDTO(user, room, new Message[0]);
-	}
-
-	private Room getRoomFromPoa(RoomImpl roomPoa) {
-		org.omg.CORBA.Object roomObject;
-		try {
-			roomObject = rootpoa.servant_to_reference(roomPoa);
-			return RoomHelper.narrow(roomObject);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private RoomImpl getImplFromRoom(Room room) {
-		Servant roomObject;
-		try {
-			roomObject = rootpoa.reference_to_servant(room);
-			return (RoomImpl) roomObject;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@Override
@@ -102,21 +63,20 @@ public class WorldManagerImpl extends WorldManagerPOA {
 
 	@Override
 	public Room changeRoom(Room oldRoom, User user, Orientation orientation) {
-		RoomImpl oldRoomImpl = getImplFromRoom(oldRoom);
+		RoomImpl oldRoomImpl = getImplFromRoom(rootpoa, oldRoom);
 		int[] coordinates = ServerUtils.getNewCoordinates(oldRoomImpl.getX(), oldRoomImpl.getY(), orientation);
-		int x = coordinates[0];
-		int y = coordinates[1];
-		if (x < 0 || y < 0 || x >= rooms.size() || y >= rooms.get(x).size()) {
+		RoomImpl newRoomImpl = rooms.get(coordinates[0], coordinates[1]);
+		if (newRoomImpl == null) {
 			System.out.println("No room found");
 			return oldRoom;
 		} else {
-			return getRoomFromPoa(rooms.get(x).get(y));
+			return getRoomFromPoa(rootpoa, newRoomImpl);
 		}
 	}
 
 	@Override
 	public void logout(User user, Room room) {
-		RoomImpl roomImpl = getImplFromRoom(room);
-		roomImpl.logout(user);		
+		RoomImpl roomImpl = getImplFromRoom(rootpoa, room);
+		roomImpl.logout(user);
 	}
 }

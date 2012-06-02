@@ -1,13 +1,19 @@
 package utils;
 
+import static generated.tables.Room.ROOM;
 import static generated.tables.User.USER;
 import generated.VworldFactory;
+import generated.tables.records.RoomRecord;
 import interfaces.Orientation;
+import interfaces.Room;
+import interfaces.RoomHelper;
 import interfaces.WorldManager;
 import interfaces.WorldManagerHelper;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
@@ -15,7 +21,9 @@ import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
+import org.omg.PortableServer.Servant;
 
+import server.RoomImpl;
 import server.WorldManagerImpl;
 
 public class ServerUtils {
@@ -44,19 +52,18 @@ public class ServerUtils {
 		return coordinates;
 	}
 
-	public static Connection getConnection() throws Exception {
+	public static Connection getDbConnection() throws Exception {
 		Class.forName(JDBC_CLASS).newInstance();
 		Connection connexion = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 		return connexion;
 	}
 
-	public static ORB getOrb(String[] args) throws Exception {
+	public static ORB initializeOrbAndRegisterWorldManager(String[] args) throws Exception {
 		// initialisation de l’ORB et création de l’objet servant
 		ORB orb = ORB.init(args, null);
 		POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 		rootpoa.the_POAManager().activate();
-		WorldManagerImpl worldManagerImpl = new WorldManagerImpl();
-		worldManagerImpl.initialiseOrb(orb);
+		WorldManagerImpl worldManagerImpl = new WorldManagerImpl(orb, rootpoa);
 		// enregistrement de l’objet dans le naming service
 		org.omg.CORBA.Object ref = rootpoa.servant_to_reference(worldManagerImpl);
 		WorldManager worldManager = WorldManagerHelper.narrow(ref);
@@ -68,6 +75,41 @@ public class ServerUtils {
 	}
 
 	public static void initializeDB(VworldFactory db) {
+		// Batch create rooms
+		List<RoomRecord> roomRecords = new ArrayList<RoomRecord>();
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				RoomRecord roomRecord = db.newRecord(ROOM);
+				roomRecord.setName("Room " + i + '-' + j);
+				roomRecord.setX(i);
+				roomRecord.setY(j);
+				roomRecords.add(roomRecord);
+			}
+		}
+		db.batchStore(roomRecords.toArray(new RoomRecord[roomRecords.size()])).execute();
+		// Create sample users
 		db.insertInto(USER, USER.LOGIN, USER.PASSWORD).values("a", "a").values("b", "b").values("c", "c").execute();
+	}
+
+	public static Room getRoomFromPoa(POA rootpoa, RoomImpl roomPoa) {
+		org.omg.CORBA.Object roomObject;
+		try {
+			roomObject = rootpoa.servant_to_reference(roomPoa);
+			return RoomHelper.narrow(roomObject);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static RoomImpl getImplFromRoom(POA rootpoa, Room room) {
+		Servant roomObject;
+		try {
+			roomObject = rootpoa.reference_to_servant(room);
+			return (RoomImpl) roomObject;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

@@ -8,34 +8,32 @@ import interfaces.UserMood;
 import interfaces.UserSex;
 import interfaces.UserSize;
 
-import java.util.List;
-
 public class UserDao {
 
 	public static User findByLoginAndPassword(String login, String password) {
 		User user = null;
-		List<UserRecord> userRecords = getDb().selectFrom(USER).where(USER.LOGIN.equal(login))
-				.and(USER.PASSWORD.equal(password)).fetch();
-		if (userRecords.size() == 1) {
-			user = getUserFromUserRecord(userRecords.get(0));
+		UserRecord userRecord = getDb().selectFrom(USER).where(USER.LOGIN.equal(login))
+				.and(USER.PASSWORD.equal(password)).fetchAny();
+		if (userRecord != null) {
+			user = getUserFromUserRecord(userRecord);
 		}
 		return user;
 	}
 
-	public void setPassword(User user, String password) {
-
+	public static void setPassword(User user, String password) {
+		getDb().update(USER).set(USER.PASSWORD, password).where(USER.LOGIN.equal(user.login)).execute();
 	}
 
-	public void setMood(User user, UserMood mood) {
-
+	public static void setMood(User user, UserMood mood) {
+		getDb().update(USER).set(USER.MOOD, mood.value()).where(USER.LOGIN.equal(user.login)).execute();
 	}
 
-	public void setSex(User user, UserSex sex) {
-
+	public static void setSex(User user, UserSex sex) {
+		getDb().update(USER).set(USER.SEX, sex.value()).where(USER.LOGIN.equal(user.login)).execute();
 	}
 
-	public void setSize(User user, UserSize size) {
-
+	public static void setSize(User user, UserSize size) {
+		getDb().update(USER).set(USER.SIZE, size.value()).where(USER.LOGIN.equal(user.login)).execute();
 	}
 
 	private static User getUserFromUserRecord(UserRecord userRecord) {

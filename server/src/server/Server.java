@@ -13,17 +13,19 @@ public class Server {
 
 	private static ORB orb;
 	private static VworldFactory db;
-	private static final boolean SHOULD_INITIALIZE_DB = false;
+	private static final boolean SHOULD_INITIALIZE_DB = true;
 
 	public static void main(String[] args) {
 		Connection connection = null;
 		try {
-			orb = ServerUtils.getOrb(args);
-			connection = ServerUtils.getConnection();
-			db = new VworldFactory(connection);
+			// Initialisation de la BDD
+			Connection connexion = ServerUtils.getDbConnection();
+			db = new VworldFactory(connexion);
 			if (SHOULD_INITIALIZE_DB) {
 				ServerUtils.initializeDB(db);
 			}
+			// Enregistrement et lancement du serveur
+			orb = ServerUtils.initializeOrbAndRegisterWorldManager(args);
 			System.out.println("Server ready and waiting ...");
 			orb.run();
 		} catch (Exception e) {

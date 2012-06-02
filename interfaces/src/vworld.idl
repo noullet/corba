@@ -73,7 +73,7 @@ module interfaces {
 		readonly attribute string name;
 			
 		void sendMessage(in Message message);
-		User changePassword(in User user, in string password);		
+		void changePassword(in User user, in string password);		
 		User changeSize(in User user, in UserSize size);	
 		User changeMood(in User user, in UserMood mood);	
 		User changeSex(in User user, in UserSex sex);
