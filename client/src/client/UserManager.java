@@ -71,10 +71,8 @@ public class UserManager {
 			message.content = "Client connecté";
 			message.sender = this.user;
 			message.type = MessageType.BROADCAST;
-			mainFrame.setVisible(true);
-			ArrayList<String> listConnected = new ArrayList<String>();
-			listConnected.add(user.login);
-			mainFrame.initializeList(listConnected, this);
+			mainFrame.setVisible(true);			
+			mainFrame.updateListConnected(room.loginList());
 			mainFrame.newConnection(user.login);
 		} else {
 			LoginDialog loginDialog = new LoginDialog(this.mainFrame);
@@ -111,18 +109,40 @@ public class UserManager {
 		Message message = new Message();
 		message.content = content;
 		message.sender = user;
-		message.receiver = user;
+		message.receiver = user.login;
 		message.type = MessageType.BROADCAST;
 		mainFrame.newMessage(user.login, content);
 		room.sendMessage(message);			
 	}
 	
+	public void sendSingleCastMessage(String content){
+		String[] split = content.split(" ");
+		StringBuffer newContent = new StringBuffer();
+		for(int i = 2; i < split.length ; i++){
+			newContent.append(split[i] + " ");
+		}
+		Message message = new Message();
+		message.content = newContent.toString();
+		message.sender = user;
+		message.receiver = split[1];
+		message.type = MessageType.SINGLECAST;
+		mainFrame.newSendSingleMessage(message.receiver, newContent.toString());
+		room.sendMessage(message);
+	}
+	
 	public void notifyMessage(Message message) {
-		mainFrame.newMessage(message.sender.login, message.content);
+		if(message.type == MessageType.BROADCAST){
+			mainFrame.newMessage(message.sender.login, message.content);
+		}
+		else{
+			mainFrame.newSingleMessage(message.sender.login, message.content);
+		}
+				
 	}
 	
 	public void notifyConnection(User user) {
 		mainFrame.newConnection(user.login);
+		mainFrame.updateListConnected(room.loginList());
 	}
 	
 	public void notifyChangeSize(User user, UserSize size) {
@@ -139,10 +159,12 @@ public class UserManager {
 	
 	public void notifyLogout(User user) {
 		mainFrame.newLogout(user.login);
+		mainFrame.updateListConnected(room.loginList());		
 	}
 	
 	private void initializeMainFrame(){
 		this.mainFrame = new MainFrame();
+		this.mainFrame.initialize(this);
 		this.mainFrame.addWindowListener(new WindowListener() {
 			
 			@Override

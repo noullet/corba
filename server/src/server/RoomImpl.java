@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RoomImpl extends RoomPOA {
 
@@ -36,7 +37,7 @@ public class RoomImpl extends RoomPOA {
 			}
 		} else {
 			if(!message.receiver.equals(message.sender))
-			this.users().get(message.receiver).notifyMessage(message);
+				this.users().get(message.receiver).notifyMessage(message);
 		}
 
 	}
@@ -108,6 +109,18 @@ public class RoomImpl extends RoomPOA {
 	
 	public Map<String, UserService> users(){
 		return users;
+	}
+
+	@Override
+	public String[] loginList() {
+		Set<String> loginList = this.users().keySet();
+		String[] loginListToReturn = new String[loginList.size()];
+		int i = 0;
+		for(String login : loginList){
+			loginListToReturn[i] = login;
+			i++;
+		}
+		return loginListToReturn;
 	}
 	
 }

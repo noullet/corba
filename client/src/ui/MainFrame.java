@@ -36,7 +36,8 @@ import client.UserManager;
  */
 public class MainFrame extends JFrame {
 	public MainFrame() {
-		initComponents();
+		this.setPreferredSize(new Dimension(500, 500));
+		initComponents();		
 	}
 
 	private void envoyerActionPerformed(ActionEvent e) {
@@ -118,7 +119,7 @@ public class MainFrame extends JFrame {
 		scrollPane2 = new JScrollPane();
 		chatArea = new JTextArea();
 		scrollPane3 = new JScrollPane();
-		list1 = new JList();
+		list1 = new JList<String>();
 
 		// ======== this ========
 		setTitle("PizzaChat");
@@ -365,25 +366,36 @@ public class MainFrame extends JFrame {
 	private JScrollPane scrollPane2;
 	private JTextArea chatArea;
 	private JScrollPane scrollPane3;
-	private JList list1;
+	private JList<String> list1;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
-	private DefaultListModel connectedList;
+	private DefaultListModel<String> connectedList;
 	private UserManager userManager;
 
-	public void initializeList(ArrayList<String> listConnected, UserManager userManager) {
-		this.userManager = userManager;
-		connectedList = new DefaultListModel();
+	public void initialize(UserManager userManager){
+		this.chatArea.setEditable(false);
+		this.userManager = userManager;		
+	}
+	
+	public void updateListConnected(String[] listConnected) {
+		connectedList = new DefaultListModel<String>();
 		for (String connected : listConnected) {
 			connectedList.addElement(connected);
 		}
 		this.list1.setModel(connectedList);
-		this.list1.updateUI();
-		this.chatArea.setEditable(false);
+		this.scrollPane3.updateUI();
 	}
 
 	public void newMessage(String username, String message) {
 		this.updateChatArea(username + " : " + message + "\n");
+	}
+	
+	public void newSingleMessage(String username, String message){
+		this.updateChatArea("From " + username + " : " + message + "\n");
+	}
+	
+	public void newSendSingleMessage(String username, String message){
+		this.updateChatArea("To " + username + " : " + message + "\n");
 	}
 
 	public void newConnection(String username) {
@@ -454,7 +466,11 @@ public class MainFrame extends JFrame {
 	private void sendMessage() {
 		String message = this.messageToSend.getText();
 		this.clearMessageToSend();
-		Client.getUserManager().sendBroadCastMessage(message);
+		if(message.startsWith("/w")){
+			Client.getUserManager().sendSingleCastMessage(message);
+		} else {
+			Client.getUserManager().sendBroadCastMessage(message);
+		}
 	}
 	
 	public void newLogout(String username) {
