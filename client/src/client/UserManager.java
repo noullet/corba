@@ -50,7 +50,7 @@ public class UserManager {
 			this.room = loginDTO.room;
 			mainFrame.setVisible(true);
 			mainFrame.updateListConnected(room.loginList());
-			mainFrame.newConnection(user.login);
+			mainFrame.newConnection(user.login, room.name());
 		} else {
 			LoginDialog loginDialog = new LoginDialog(this.mainFrame);
 			loginDialog.setVisible(true);
@@ -77,7 +77,13 @@ public class UserManager {
 	}
 
 	public void changeRoom(Orientation orientation) {
+		Room oldRoom = room;
 		room = worldManager.changeRoom(room, user, orientation);
+		if(!oldRoom.equals(room)){
+			mainFrame.clearChatArea();
+			mainFrame.newConnection(user.login, room.name());
+			mainFrame.updateListConnected(room.loginList());
+		}
 	}
 
 	public void sendBroadCastMessage(String content) {
@@ -115,7 +121,10 @@ public class UserManager {
 	}
 
 	public void notifyConnection(User user) {
-		mainFrame.newConnection(user.login);
+		if(user.login.equals(this.user.login)){
+			mainFrame.clearChatArea();
+		}
+		mainFrame.newConnection(user.login, room.name());		
 		mainFrame.updateListConnected(room.loginList());
 	}
 

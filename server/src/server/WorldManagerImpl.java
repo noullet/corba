@@ -63,7 +63,11 @@ public class WorldManagerImpl extends WorldManagerPOA {
 			return oldRoom;
 		} else {
 			UserDao.setRoom(user, newRoomImpl);
-			return getRoomFromPoa(Server.getRootpoa(), newRoomImpl);
+			UserService userService = oldRoomImpl.getUserService(user.login);
+			oldRoomImpl.logout(user);
+			newRoomImpl.login(user, userService);
+			System.out.println("User " + user.login + " change room " + oldRoomImpl.name() + " to " + newRoomImpl.name());
+			return getRoomFromPoa(Server.getRootpoa(), newRoomImpl);			
 		}
 	}
 
@@ -71,5 +75,6 @@ public class WorldManagerImpl extends WorldManagerPOA {
 	public void logout(User user, Room room) {
 		RoomImpl roomImpl = getImplFromRoom(Server.getRootpoa(), room);
 		roomImpl.logout(user);
+		System.out.println("User " + user.login + " logged out");
 	}
 }

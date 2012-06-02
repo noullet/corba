@@ -62,6 +62,26 @@ new FormModel {
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "menu2"
 					"text": "Room"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "northMenu"
+						"text": "Nord"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "changeRoomActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "southMenu"
+						"text": "Sud"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "changeRoomActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "eastMenu"
+						"text": "Est"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "changeRoomActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "WestMenu"
+						"text": "Ouest"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "changeRoomActionPerformed", true ) )
+					} )
 				} )
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "menu3"

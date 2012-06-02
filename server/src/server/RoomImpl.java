@@ -114,7 +114,6 @@ public class RoomImpl extends RoomPOA {
 		for (String key : this.users().keySet()) {
 			this.users().get(key).notifyLogout(user);
 		}
-		System.out.println("User " + user.login + " logged out");
 	}
 
 	public Map<String, UserService> users() {
@@ -133,4 +132,7 @@ public class RoomImpl extends RoomPOA {
 		return loginListToReturn;
 	}
 
+	public UserService getUserService(String login){
+		return this.users().get(login);
+	}
 }
