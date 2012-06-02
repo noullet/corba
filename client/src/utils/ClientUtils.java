@@ -14,9 +14,7 @@ public class ClientUtils {
 
 	private static final String TNAMESERV_COMPONENT = "WorldManager";
 
-	public static final WorldManager getWorldManager(String[] args) throws Exception {
-		// create and initialize the ORB
-		ORB orb = ORB.init(args, null);
+	public static final WorldManager getWorldManager(String[] args, ORB orb) throws Exception {
 		// get the root naming context
 		org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 		NamingContext ncRef = NamingContextHelper.narrow(objRef);
@@ -34,5 +32,10 @@ public class ClientUtils {
 		System.out.println("-- Sex : " + user.sex.value());
 		System.out.println("-- Size : " + user.size.value());
 		System.out.println("-- Mood : " + user.mood.value());
+	}
+	
+	public static ORB getOrb(String[] args) throws Exception{
+		ORB orb = ORB.init(args, null);
+		return orb;
 	}
 }

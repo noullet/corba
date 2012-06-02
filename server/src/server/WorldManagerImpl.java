@@ -65,9 +65,11 @@ public class WorldManagerImpl extends WorldManagerPOA {
 		if (user != null) {
 			System.out.println("User " + login + " logged in");
 		} else {
-			System.out.println("User " + login + " cannot be logged in: wrong login or password");
+			return null;
 		}
-		Room room = getRoomFromPoa(rooms.get(0).get(0));
+		RoomImpl roomToConnect = rooms.get(0).get(0);
+		Room room = getRoomFromPoa(roomToConnect);
+		roomToConnect.login(user, userService);
 		return new LoginDTO(user, room, new Message[0]);
 	}
 
@@ -110,5 +112,11 @@ public class WorldManagerImpl extends WorldManagerPOA {
 		} else {
 			return getRoomFromPoa(rooms.get(x).get(y));
 		}
+	}
+
+	@Override
+	public void logout(User user, Room room) {
+		RoomImpl roomImpl = getImplFromRoom(room);
+		roomImpl.logout(user);		
 	}
 }

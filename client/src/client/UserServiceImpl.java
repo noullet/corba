@@ -10,11 +10,6 @@ import interfaces.UserSize;
 public class UserServiceImpl extends UserServicePOA {
 
 	@Override
-	public String login() {
-		return null;
-	}
-
-	@Override
 	public void notifyMessage(Message message) {
 		Client.getUserManager().notifyMessage(message);
 	}
@@ -26,17 +21,24 @@ public class UserServiceImpl extends UserServicePOA {
 
 	@Override
 	public void notifyChangeSize(User user, UserSize size) {
-
-	}
-
-	@Override
-	public void notifyChangeMood(User user, UserMood mood) {
-
+		Client.getUserManager().notifyChangeSize(user, size);
 	}
 
 	@Override
 	public void notifyChangeSex(User user, UserSex sex) {
-
+		Client.getUserManager().notifyChangeSex(user, sex);
 	}
 
+	@Override
+	public void notifyChangeMood(User user, UserMood mood) {
+		Client.getUserManager().notifyChangeMood(user, mood);
+	}
+
+	@Override
+	public void notifyLogout(User user) {
+		Client.getUserManager().notifyLogout(user);
+		
+	}
 }
+
+

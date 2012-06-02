@@ -456,5 +456,9 @@ public class MainFrame extends JFrame {
 		this.clearMessageToSend();
 		Client.getUserManager().sendBroadCastMessage(message);
 	}
+	
+	public void newLogout(String username) {
+		this.updateChatArea(username + " s'est déconnecté de la salle\n");
+	}
 
 }

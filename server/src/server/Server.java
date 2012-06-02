@@ -13,7 +13,7 @@ public class Server {
 
 	private static ORB orb;
 	private static VworldFactory db;
-	private static final boolean SHOULD_INITIALIZE_DB = true;
+	private static final boolean SHOULD_INITIALIZE_DB = false;
 
 	public static void main(String[] args) {
 		Connection connection = null;

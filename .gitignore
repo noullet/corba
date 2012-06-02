@@ -1,4 +1,10 @@
 bin/
+
 .metadata/
+
 server/src/generated/
+
+
 *.bak
+
+interfaces/start-tnameserv-Beber.bat

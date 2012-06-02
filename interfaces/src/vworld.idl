@@ -51,11 +51,10 @@ module interfaces {
 		readonly attribute Rooms rooms;
 	};
 	 	
-	interface UserService {
-		readonly attribute string login;
-		
+	interface UserService {		
 		void notifyMessage(in Message message);
 		void notifyConnection(in User user);
+		void notifyLogout(in User user);
 		void notifyChangeSize(in User user, in UserSize size);	
 		void notifyChangeMood(in User user, in UserMood mood);	
 		void notifyChangeSex(in User user, in UserSex sex);	
@@ -66,10 +65,10 @@ module interfaces {
 		LoginDTO login(in string login, in string password, in UserService userService);
 	    Room changeRoom(in Room oldRoom, in User user, in Orientation orientation);
 		Admin loginAdmin(in string login, in string password);
+		void logout(in User user, in Room room);
 	};
 			
 	interface Room {
-		readonly attribute Users users;
 		readonly attribute string name;
 			
 		void sendMessage(in Message message);
