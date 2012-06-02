@@ -1,6 +1,7 @@
 package utils;
 
-import static server.generated.tables.User.USER;
+import static generated.tables.User.USER;
+import generated.VworldFactory;
 import interfaces.Orientation;
 import interfaces.WorldManager;
 import interfaces.WorldManagerHelper;
@@ -16,7 +17,6 @@ import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
 import server.WorldManagerImpl;
-import server.generated.VworldFactory;
 
 public class ServerUtils {
 

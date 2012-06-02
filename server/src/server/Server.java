@@ -3,13 +3,12 @@ package server;
 import static utils.ServerUtils.getConnection;
 import static utils.ServerUtils.getOrb;
 import static utils.ServerUtils.initializeDB;
+import generated.VworldFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.omg.CORBA.ORB;
-
-import server.generated.VworldFactory;
 
 public class Server {
 

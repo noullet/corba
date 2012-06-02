@@ -39,7 +39,7 @@
 
     <target>
       <!-- The destination package of your generated classes (within the destination directory) -->
-      <packageName>server.generated</packageName>
+      <packageName>generated</packageName>
 
       <!-- The destination directory of your generated classes -->
       <directory>..\src</directory>
