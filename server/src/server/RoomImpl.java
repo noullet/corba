@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import dao.MessageDao;
 import dao.UserDao;
 
 public class RoomImpl extends RoomPOA {
@@ -32,12 +33,18 @@ public class RoomImpl extends RoomPOA {
 	public void sendMessage(Message message) {
 		if (message.type.equals(MessageType.BROADCAST)) {
 			for (String key : this.users().keySet()) {
-				if (!key.equals(message.sender.login))
+				if (!key.equals(message.sender))
 					this.users().get(key).notifyMessage(message);
 			}
 		} else {
-			if (!message.receiver.equals(message.sender))
-				this.users().get(message.receiver).notifyMessage(message);
+			if (!message.receiver.equals(message.sender)) {
+				UserService userService = this.users().get(message.receiver);
+				if (userService != null) {
+					userService.notifyMessage(message);
+				} else {
+					MessageDao.saveMessage(message);
+				}
+			}
 		}
 
 	}

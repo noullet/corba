@@ -13,7 +13,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -75,7 +80,7 @@ public class LoginDialog extends JDialog {
 		okButton = new JButton();
 		cancelButton = new JButton();
 
-		//======== this ========
+		// ======== this ========
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -91,24 +96,29 @@ public class LoginDialog extends JDialog {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
-		//======== dialogPane ========
+		// ======== dialogPane ========
 		{
 			dialogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
 
 			// JFormDesigner evaluation mark
-			dialogPane.setBorder(new javax.swing.border.CompoundBorder(
-				new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-					"JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
-					javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-					java.awt.Color.red), dialogPane.getBorder())); dialogPane.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+			dialogPane.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(
+					new javax.swing.border.EmptyBorder(0, 0, 0, 0), "JFormDesigner Evaluation",
+					javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font(
+							"Dialog", java.awt.Font.BOLD, 12), java.awt.Color.red), dialogPane.getBorder()));
+			dialogPane.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+				public void propertyChange(java.beans.PropertyChangeEvent e) {
+					if ("border".equals(e.getPropertyName()))
+						throw new RuntimeException();
+				}
+			});
 
 			dialogPane.setLayout(new BorderLayout());
 
-			//======== contentPanel ========
+			// ======== contentPanel ========
 			{
 				contentPanel.setLayout(new GridLayout(2, 2));
 
-				//======== panel1 ========
+				// ======== panel1 ========
 				{
 					panel1.addKeyListener(new KeyAdapter() {
 						@Override
@@ -118,11 +128,11 @@ public class LoginDialog extends JDialog {
 					});
 					panel1.setLayout(new FlowLayout());
 
-					//---- label1 ----
+					// ---- label1 ----
 					label1.setText("Login : ");
 					panel1.add(label1);
 
-					//---- textField1 ----
+					// ---- textField1 ----
 					textField1.setColumns(35);
 					textField1.addKeyListener(new KeyAdapter() {
 						@Override
@@ -132,11 +142,11 @@ public class LoginDialog extends JDialog {
 					});
 					panel1.add(textField1);
 
-					//---- label2 ----
+					// ---- label2 ----
 					label2.setText("Password : ");
 					panel1.add(label2);
 
-					//---- passwordField1 ----
+					// ---- passwordField1 ----
 					passwordField1.setColumns(35);
 					passwordField1.addKeyListener(new KeyAdapter() {
 						@Override
@@ -150,14 +160,14 @@ public class LoginDialog extends JDialog {
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-			//======== buttonBar ========
+			// ======== buttonBar ========
 			{
 				buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
 				buttonBar.setLayout(new GridBagLayout());
-				((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 85, 80};
-				((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0, 0.0};
+				((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[] { 0, 85, 80 };
+				((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[] { 1.0, 0.0, 0.0 };
 
-				//---- okButton ----
+				// ---- okButton ----
 				okButton.setText("OK");
 				okButton.addActionListener(new ActionListener() {
 					@Override
@@ -165,11 +175,10 @@ public class LoginDialog extends JDialog {
 						okButtonActionPerformed(e);
 					}
 				});
-				buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-					new Insets(0, 0, 0, 5), 0, 0));
+				buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+						GridBagConstraints.BOTH, new Insets(0, 0, 0, 5), 0, 0));
 
-				//---- cancelButton ----
+				// ---- cancelButton ----
 				cancelButton.setText("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					@Override
@@ -177,9 +186,8 @@ public class LoginDialog extends JDialog {
 						cancelButtonActionPerformed(e);
 					}
 				});
-				buttonBar.add(cancelButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
-					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-					new Insets(0, 0, 0, 0), 0, 0));
+				buttonBar.add(cancelButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+						GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 			}
 			dialogPane.add(buttonBar, BorderLayout.SOUTH);
 		}
@@ -202,12 +210,13 @@ public class LoginDialog extends JDialog {
 	private JPanel buttonBar;
 	private JButton okButton;
 	private JButton cancelButton;
+
 	// JFormDesigner - End of variables declaration //GEN-END:variables
-	
-	private void login(){
+
+	private void login() {
 		String username = this.textField1.getText();
 		String password = new String(this.passwordField1.getPassword());
-		Client.getUserManager().loginFromFrame(username, password);
+		Client.getUserManager().login(username, password);
 		this.setVisible(false);
 	}
 }

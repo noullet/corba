@@ -1,5 +1,6 @@
 package client;
 
+import static utils.ClientUtils.getUserServiceFromPoa;
 import interfaces.LoginDTO;
 import interfaces.Message;
 import interfaces.MessageType;
@@ -8,16 +9,12 @@ import interfaces.Room;
 import interfaces.User;
 import interfaces.UserMood;
 import interfaces.UserService;
-import interfaces.UserServiceHelper;
 import interfaces.UserSex;
 import interfaces.UserSize;
 import interfaces.WorldManager;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-
-import org.omg.PortableServer.POA;
-import org.omg.PortableServer.POAHelper;
 
 import ui.LoginDialog;
 import ui.MainFrame;
@@ -28,48 +25,29 @@ public class UserManager {
 	private User user;
 	private Room room;
 	private MainFrame mainFrame;
-	private UserServiceImpl userService;
 
 	public UserManager(WorldManager worldManager) {
 		this.worldManager = worldManager;
-		userService = new UserServiceImpl();
 	}
 
-	public void run() {
+	public void start() {
 		initializeMainFrame();
 		LoginDialog loginDialog = new LoginDialog(this.mainFrame);
 		loginDialog.setVisible(true);
 
 	}
 
-	private UserService getUserServiceFromPoa(UserServiceImpl userServicePoa) throws Exception {
-		POA rootpoa = POAHelper.narrow(Client.getOrbInst().resolve_initial_references("RootPOA"));
-		org.omg.CORBA.Object userServiceObject;
-		try {
-			userServiceObject = rootpoa.servant_to_reference(userServicePoa);
-			return UserServiceHelper.narrow(userServiceObject);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public void loginFromFrame(String login, String password) {
+	public void login(String login, String password) {
 		UserService service = null;
 		try {
-			service = getUserServiceFromPoa(new UserServiceImpl());
+			service = getUserServiceFromPoa(Client.getRootpoa(), new UserServiceImpl());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		LoginDTO loginDTO = worldManager.login(login, password, service);
 		if (loginDTO != null) {
 			this.user = loginDTO.user;
 			this.room = loginDTO.room;
-			Message message = new Message();
-			message.content = "Client connecté";
-			message.sender = this.user;
-			message.type = MessageType.BROADCAST;
 			mainFrame.setVisible(true);
 			mainFrame.updateListConnected(room.loginList());
 			mainFrame.newConnection(user.login);
@@ -105,8 +83,8 @@ public class UserManager {
 	public void sendBroadCastMessage(String content) {
 		Message message = new Message();
 		message.content = content;
-		message.sender = user;
-		message.receiver = user.login;
+		message.sender = user.login;
+		message.receiver = "";
 		message.type = MessageType.BROADCAST;
 		mainFrame.newMessage(user.login, content);
 		room.sendMessage(message);
@@ -120,7 +98,7 @@ public class UserManager {
 		}
 		Message message = new Message();
 		message.content = newContent.toString();
-		message.sender = user;
+		message.sender = user.login;
 		message.receiver = split[1];
 		message.type = MessageType.SINGLECAST;
 		mainFrame.newSendSingleMessage(message.receiver, newContent.toString());
@@ -129,9 +107,9 @@ public class UserManager {
 
 	public void notifyMessage(Message message) {
 		if (message.type == MessageType.BROADCAST) {
-			mainFrame.newMessage(message.sender.login, message.content);
+			mainFrame.newMessage(message.sender, message.content);
 		} else {
-			mainFrame.newSingleMessage(message.sender.login, message.content);
+			mainFrame.newSingleMessage(message.sender, message.content);
 		}
 
 	}
@@ -165,25 +143,21 @@ public class UserManager {
 
 			@Override
 			public void windowOpened(WindowEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void windowIconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void windowDeiconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 
@@ -195,13 +169,11 @@ public class UserManager {
 
 			@Override
 			public void windowClosed(WindowEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 		});

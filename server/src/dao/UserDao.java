@@ -2,11 +2,13 @@ package dao;
 
 import static generated.tables.User.USER;
 import static server.Server.getDb;
+import generated.tables.records.RoomRecord;
 import generated.tables.records.UserRecord;
 import interfaces.User;
 import interfaces.UserMood;
 import interfaces.UserSex;
 import interfaces.UserSize;
+import server.RoomImpl;
 
 public class UserDao {
 
@@ -36,7 +38,12 @@ public class UserDao {
 		getDb().update(USER).set(USER.SIZE, size.value()).where(USER.LOGIN.equal(user.login)).execute();
 	}
 
-	private static User getUserFromUserRecord(UserRecord userRecord) {
+	public static void setRoom(User user, RoomImpl room) {
+		RoomRecord roomRecord = RoomDao.getRoomRecordFromCoordinates(room.getX(), room.getY());
+		getDb().update(USER).set(USER.ROOM, roomRecord.getId()).where(USER.LOGIN.equal(user.login)).execute();
+	}
+
+	public static User getUserFromUserRecord(UserRecord userRecord) {
 		return new User(userRecord.getLogin(), UserSize.from_int(userRecord.getSize()), UserMood.from_int(userRecord
 				.getMood()), UserSex.from_int(userRecord.getSex()));
 	}

@@ -20,7 +20,6 @@ import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
-import org.omg.PortableServer.POAHelper;
 import org.omg.PortableServer.Servant;
 
 import server.RoomImpl;
@@ -58,20 +57,13 @@ public class ServerUtils {
 		return connexion;
 	}
 
-	public static ORB initializeOrbAndRegisterWorldManager(String[] args) throws Exception {
-		// initialisation de l’ORB et création de l’objet servant
-		ORB orb = ORB.init(args, null);
-		POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-		rootpoa.the_POAManager().activate();
-		WorldManagerImpl worldManagerImpl = new WorldManagerImpl(orb, rootpoa);
-		// enregistrement de l’objet dans le naming service
+	public static void registerWorldManager(ORB orb, POA rootpoa, WorldManagerImpl worldManagerImpl) throws Exception {
 		org.omg.CORBA.Object ref = rootpoa.servant_to_reference(worldManagerImpl);
 		WorldManager worldManager = WorldManagerHelper.narrow(ref);
 		org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 		NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 		NameComponent path[] = ncRef.to_name(TNAMESERV_COMPONENT);
 		ncRef.rebind(path, worldManager);
-		return orb;
 	}
 
 	public static void initializeDB(VworldFactory db) {

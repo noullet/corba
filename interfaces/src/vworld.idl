@@ -30,7 +30,7 @@ module interfaces {
 	};
 		
 	struct Message {
-		User sender;
+		string sender;
 		string receiver;
 		string content;
 		MessageType type;

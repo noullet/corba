@@ -13,13 +13,8 @@ import com.google.common.collect.Table;
 
 public class RoomDao {
 
-	public static RoomImpl findRoomImplFromCoordinates(int x, int y) {
-		RoomImpl room = null;
-		RoomRecord roomRecord = getDb().selectFrom(ROOM).where(ROOM.X.equal(x)).and(ROOM.Y.equal(y)).fetchAny();
-		if (roomRecord != null) {
-			room = getRoomImplFromRoomRecord(roomRecord);
-		}
-		return room;
+	public static RoomRecord getRoomRecordFromCoordinates(int x, int y) {
+		return getDb().selectFrom(ROOM).where(ROOM.X.equal(x)).and(ROOM.Y.equal(y)).fetchAny();
 	}
 
 	public static Table<Integer, Integer, RoomImpl> findAllRooms() {

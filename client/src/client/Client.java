@@ -1,31 +1,27 @@
 package client;
 
-import static utils.ClientUtils.getWorldManager;
+import static utils.ClientUtils.retrieveWorldManager;
+import interfaces.WorldManager;
 
 import org.omg.CORBA.ORB;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
-import org.omg.PortableServer.POAManager;
-
-import utils.ClientUtils;
-
-import interfaces.WorldManager;
 
 public class Client {
 
 	private static UserManager userManager;
 	private static ORB orb;
+	private static POA rootpoa;
 
 	public static void main(String[] args) {
 		try {
-			orb = ClientUtils.getOrb(args);
-			org.omg.CORBA.Object obj = orb.resolve_initial_references("RootPOA");
-			POA rootpoa = POAHelper.narrow(obj);
-			POAManager manager = rootpoa.the_POAManager();
-			manager.activate();
-			WorldManager worldManager = getWorldManager(args, orb);
+			// Lancement du client et récupération de la référence du serveur
+			orb = ORB.init(args, null);
+			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+			rootpoa.the_POAManager().activate();
+			WorldManager worldManager = retrieveWorldManager(orb);
 			userManager = new UserManager(worldManager);
-			userManager.run();
+			userManager.start();
 			orb.run();
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
@@ -36,8 +32,12 @@ public class Client {
 	public static UserManager getUserManager() {
 		return userManager;
 	}
-	
-	public static ORB getOrbInst(){
+
+	public static ORB getOrb() {
 		return orb;
+	}
+
+	public static POA getRootpoa() {
+		return rootpoa;
 	}
 }
