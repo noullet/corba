@@ -8,6 +8,7 @@ import interfaces.Message;
 import interfaces.MessageType;
 import interfaces.User;
 
+import java.sql.Date;
 import java.util.List;
 
 import com.google.common.base.Function;
@@ -34,13 +35,15 @@ public class MessageDao {
 	public static Message getMessageFromRecord(MessageRecord messageRecord) {
 		UserRecord sender = messageRecord.fetchUserBySender();
 		UserRecord receiver = messageRecord.fetchUserByReceiver();
-		return new Message(sender.getLogin(), receiver.getLogin(), messageRecord.getContent(), MessageType.SINGLECAST);
+		long timestamp = messageRecord.getDate().getTime();
+		return new Message(sender.getLogin(), receiver.getLogin(), messageRecord.getContent(), timestamp,
+				MessageType.SINGLECAST);
 	}
 
 	public static void saveMessage(Message message) {
 		int senderId = UserDao.getIdFromLogin(message.sender);
 		int receiverId = UserDao.getIdFromLogin(message.receiver);
-		getDb().insertInto(MESSAGE, MESSAGE.CONTENT, MESSAGE.SENDER, MESSAGE.RECEIVER)
-				.values(message.content, senderId, receiverId).execute();
+		getDb().insertInto(MESSAGE, MESSAGE.CONTENT, MESSAGE.SENDER, MESSAGE.RECEIVER, MESSAGE.DATE)
+				.values(message.content, senderId, receiverId, new Date(message.timestamp)).execute();
 	}
 }

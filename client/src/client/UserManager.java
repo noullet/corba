@@ -15,6 +15,7 @@ import interfaces.WorldManager;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Date;
 
 import ui.LoginDialog;
 import ui.MainFrame;
@@ -94,6 +95,7 @@ public class UserManager {
 		message.sender = user.login;
 		message.receiver = "";
 		message.type = MessageType.BROADCAST;
+		message.timestamp = (new Date()).getTime();
 		mainFrame.newMessage(user.login, content);
 		room.sendMessage(message);
 	}
@@ -109,6 +111,7 @@ public class UserManager {
 		message.sender = user.login;
 		message.receiver = split[1];
 		message.type = MessageType.SINGLECAST;
+		message.timestamp = (new Date()).getTime();
 		mainFrame.newSendSingleMessage(message.receiver, newContent.toString());
 		room.sendMessage(message);
 	}

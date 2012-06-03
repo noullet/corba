@@ -33,6 +33,7 @@ module interfaces {
 		string sender;
 		string receiver;
 		string content;
+		long long timestamp;
 		MessageType type;
 	};
 	

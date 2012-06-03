@@ -44,18 +44,18 @@ public class WorldManagerImpl extends WorldManagerPOA {
 		User user = UserDao.getUserFromLoginAndPassword(login, password);
 		if (user != null) {
 			System.out.println("User " + login + " logged in");
+			// Connect the user to his room
+			RoomImpl roomImpl = UserDao.getRoomFromUser(user);
+			Room room = getRoomFromPoa(Server.getRootpoa(), roomImpl);
+			roomImpl.login(user, userService);
+			// Retrieve and delete the user's pending messages
+			List<Message> userMessages = MessageDao.getMessagesFromUser(user);
+			MessageDao.deleteMessagesFromUser(user);
+			// Return the complete DTO
+			return new LoginDTO(user, room, userMessages.toArray(new Message[userMessages.size()]));
 		} else {
 			return null;
 		}
-		// Connect the user to his room
-		RoomImpl roomImpl = UserDao.getRoomFromUser(user);
-		Room room = getRoomFromPoa(Server.getRootpoa(), roomImpl);
-		roomImpl.login(user, userService);
-		// Retrieve and delete the user's pending messages
-		List<Message> userMessages = MessageDao.getMessagesFromUser(user);
-		MessageDao.deleteMessagesFromUser(user);
-		// Return the complete DTO
-		return new LoginDTO(user, room, userMessages.toArray(new Message[userMessages.size()]));
 	}
 
 	@Override

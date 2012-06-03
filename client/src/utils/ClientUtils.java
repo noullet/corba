@@ -8,6 +8,9 @@ import interfaces.UserServiceHelper;
 import interfaces.WorldManager;
 import interfaces.WorldManagerHelper;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContext;
@@ -44,8 +47,11 @@ public class ClientUtils {
 			System.out.println("No pending message");
 		}
 		for (Message message : messages) {
+			Date date = new Date(message.timestamp);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+			String formattedDate = formatter.format(date);
 			System.out.println("User : " + message.receiver);
-			System.out.println("Message from " + message.sender + ": " + message.content);
+			System.out.println(formattedDate + " - " + message.sender + ": " + message.content);
 		}
 	}
 
