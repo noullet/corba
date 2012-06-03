@@ -10,10 +10,14 @@ import interfaces.Room;
 import interfaces.User;
 import interfaces.UserService;
 import interfaces.WorldManagerPOA;
+
+import java.util.List;
+
 import utils.ServerUtils;
 
 import com.google.common.collect.Table;
 
+import dao.MessageDao;
 import dao.RoomDao;
 import dao.UserDao;
 
@@ -42,10 +46,16 @@ public class WorldManagerImpl extends WorldManagerPOA {
 		} else {
 			return null;
 		}
+		// Connect the user to his room
+		// TODO récupérer la room en base
 		RoomImpl roomToConnect = rooms.get(0, 0);
 		Room room = getRoomFromPoa(Server.getRootpoa(), roomToConnect);
 		roomToConnect.login(user, userService);
-		return new LoginDTO(user, room, new Message[0]);
+		// Retrieve and delete the user's pending messages
+		List<Message> userMessages = MessageDao.getAllMessagesForUser(user);
+		MessageDao.deleteAllMessagesForUser(user);
+		// Return the complete DTO
+		return new LoginDTO(user, room, userMessages.toArray(new Message[userMessages.size()]));
 	}
 
 	@Override
@@ -66,8 +76,9 @@ public class WorldManagerImpl extends WorldManagerPOA {
 			UserService userService = oldRoomImpl.getUserService(user.login);
 			oldRoomImpl.logout(user);
 			newRoomImpl.login(user, userService);
-			System.out.println("User " + user.login + " change room " + oldRoomImpl.name() + " to " + newRoomImpl.name());
-			return getRoomFromPoa(Server.getRootpoa(), newRoomImpl);			
+			System.out.println("User " + user.login + " change room " + oldRoomImpl.name() + " to "
+					+ newRoomImpl.name());
+			return getRoomFromPoa(Server.getRootpoa(), newRoomImpl);
 		}
 	}
 

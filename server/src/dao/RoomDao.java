@@ -13,8 +13,9 @@ import com.google.common.collect.Table;
 
 public class RoomDao {
 
-	public static RoomRecord getRoomRecordFromCoordinates(int x, int y) {
-		return getDb().selectFrom(ROOM).where(ROOM.X.equal(x)).and(ROOM.Y.equal(y)).fetchAny();
+	public static int getIdFromRoomImpl(RoomImpl room) {
+		return getDb().selectFrom(ROOM).where(ROOM.X.equal(room.getX())).and(ROOM.Y.equal(room.getY())).fetchOne()
+				.getId();
 	}
 
 	public static Table<Integer, Integer, RoomImpl> findAllRooms() {

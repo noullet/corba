@@ -1,5 +1,6 @@
 package utils;
 
+import interfaces.Message;
 import interfaces.Room;
 import interfaces.User;
 import interfaces.UserService;
@@ -35,6 +36,17 @@ public class ClientUtils {
 		System.out.println("-- Sex : " + user.sex.value());
 		System.out.println("-- Size : " + user.size.value());
 		System.out.println("-- Mood : " + user.mood.value());
+	}
+
+	public static final void printMessages(Message[] messages) {
+		System.out.println("------------------------");
+		if (messages.length == 0) {
+			System.out.println("No pending message");
+		}
+		for (Message message : messages) {
+			System.out.println("User : " + message.receiver);
+			System.out.println("Message from " + message.sender + ": " + message.content);
+		}
 	}
 
 	public static UserService getUserServiceFromPoa(POA rootpoa, UserServiceImpl userServicePoa) {

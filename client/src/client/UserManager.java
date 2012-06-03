@@ -18,6 +18,7 @@ import java.awt.event.WindowListener;
 
 import ui.LoginDialog;
 import ui.MainFrame;
+import utils.ClientUtils;
 
 public class UserManager {
 
@@ -48,6 +49,7 @@ public class UserManager {
 		if (loginDTO != null) {
 			this.user = loginDTO.user;
 			this.room = loginDTO.room;
+			ClientUtils.printMessages(loginDTO.pendingMessages);
 			mainFrame.setVisible(true);
 			mainFrame.updateListConnected(room.loginList());
 			mainFrame.newConnection(user.login, room.name());
@@ -79,7 +81,7 @@ public class UserManager {
 	public void changeRoom(Orientation orientation) {
 		Room oldRoom = room;
 		room = worldManager.changeRoom(room, user, orientation);
-		if(!oldRoom.equals(room)){
+		if (!oldRoom.equals(room)) {
 			mainFrame.clearChatArea();
 			mainFrame.newConnection(user.login, room.name());
 			mainFrame.updateListConnected(room.loginList());
@@ -121,10 +123,10 @@ public class UserManager {
 	}
 
 	public void notifyConnection(User user) {
-		if(user.login.equals(this.user.login)){
+		if (user.login.equals(this.user.login)) {
 			mainFrame.clearChatArea();
 		}
-		mainFrame.newConnection(user.login, room.name());		
+		mainFrame.newConnection(user.login, room.name());
 		mainFrame.updateListConnected(room.loginList());
 	}
 

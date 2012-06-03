@@ -2,7 +2,6 @@ package dao;
 
 import static generated.tables.User.USER;
 import static server.Server.getDb;
-import generated.tables.records.RoomRecord;
 import generated.tables.records.UserRecord;
 import interfaces.User;
 import interfaces.UserMood;
@@ -22,6 +21,14 @@ public class UserDao {
 		return user;
 	}
 
+	public static int getIdFromUser(User user) {
+		return getIdFromLogin(user.login);
+	}
+
+	public static int getIdFromLogin(String login) {
+		return getDb().selectFrom(USER).where(USER.LOGIN.equal(login)).fetchOne().getId();
+	}
+
 	public static void setPassword(User user, String password) {
 		getDb().update(USER).set(USER.PASSWORD, password).where(USER.LOGIN.equal(user.login)).execute();
 	}
@@ -39,8 +46,8 @@ public class UserDao {
 	}
 
 	public static void setRoom(User user, RoomImpl room) {
-		RoomRecord roomRecord = RoomDao.getRoomRecordFromCoordinates(room.getX(), room.getY());
-		getDb().update(USER).set(USER.ROOM, roomRecord.getId()).where(USER.LOGIN.equal(user.login)).execute();
+		int roomId = RoomDao.getIdFromRoomImpl(room);
+		getDb().update(USER).set(USER.ROOM, roomId).where(USER.LOGIN.equal(user.login)).execute();
 	}
 
 	public static User getUserFromUserRecord(UserRecord userRecord) {
