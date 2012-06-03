@@ -15,23 +15,23 @@ import com.google.common.collect.Lists;
 
 public class MessageDao {
 
-	public static List<Message> getAllMessagesForUser(User user) {
-		int receiverId = UserDao.getIdFromUser(user);
+	public static List<Message> getMessagesFromUser(User user) {
+		int receiverId = UserDao.getIdFromLogin(user.login);
 		List<MessageRecord> messageRecords = getDb().selectFrom(MESSAGE).where(MESSAGE.RECEIVER.equal(receiverId))
 				.fetch();
 		return Lists.transform(messageRecords, new Function<MessageRecord, Message>() {
 			public Message apply(MessageRecord messageRecord) {
-				return getMessageFromMessageRecord(messageRecord);
+				return getMessageFromRecord(messageRecord);
 			}
 		});
 	}
 
-	public static void deleteAllMessagesForUser(User user) {
-		int receiverId = UserDao.getIdFromUser(user);
+	public static void deleteMessagesFromUser(User user) {
+		int receiverId = UserDao.getIdFromLogin(user.login);
 		getDb().delete(MESSAGE).where(MESSAGE.RECEIVER.equal(receiverId)).execute();
 	}
 
-	private static Message getMessageFromMessageRecord(MessageRecord messageRecord) {
+	public static Message getMessageFromRecord(MessageRecord messageRecord) {
 		UserRecord sender = messageRecord.fetchUserBySender();
 		UserRecord receiver = messageRecord.fetchUserByReceiver();
 		return new Message(sender.getLogin(), receiver.getLogin(), messageRecord.getContent(), MessageType.SINGLECAST);

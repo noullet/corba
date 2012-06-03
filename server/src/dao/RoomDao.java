@@ -13,22 +13,21 @@ import com.google.common.collect.Table;
 
 public class RoomDao {
 
-	public static int getIdFromRoomImpl(RoomImpl room) {
-		return getDb().selectFrom(ROOM).where(ROOM.X.equal(room.getX())).and(ROOM.Y.equal(room.getY())).fetchOne()
-				.getId();
+	public static int getIdFromCoordinates(int x, int y) {
+		return getDb().selectFrom(ROOM).where(ROOM.X.equal(x)).and(ROOM.Y.equal(y)).fetchOne().getId();
 	}
 
 	public static Table<Integer, Integer, RoomImpl> findAllRooms() {
 		List<RoomRecord> roomRecords = getDb().selectFrom(ROOM).fetch();
 		Table<Integer, Integer, RoomImpl> rooms = HashBasedTable.create();
 		for (RoomRecord roomRecord : roomRecords) {
-			RoomImpl room = getRoomImplFromRoomRecord(roomRecord);
+			RoomImpl room = getRoomFromRecord(roomRecord);
 			rooms.put(room.getX(), room.getY(), room);
 		}
 		return rooms;
 	}
 
-	private static RoomImpl getRoomImplFromRoomRecord(RoomRecord roomRecord) {
+	public static RoomImpl getRoomFromRecord(RoomRecord roomRecord) {
 		return new RoomImpl(roomRecord.getName(), roomRecord.getX(), roomRecord.getY());
 	}
 

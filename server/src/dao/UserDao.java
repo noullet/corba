@@ -2,6 +2,7 @@ package dao;
 
 import static generated.tables.User.USER;
 import static server.Server.getDb;
+import generated.tables.records.RoomRecord;
 import generated.tables.records.UserRecord;
 import interfaces.User;
 import interfaces.UserMood;
@@ -11,22 +12,22 @@ import server.RoomImpl;
 
 public class UserDao {
 
-	public static User findByLoginAndPassword(String login, String password) {
+	public static User getUserFromLoginAndPassword(String login, String password) {
 		User user = null;
 		UserRecord userRecord = getDb().selectFrom(USER).where(USER.LOGIN.equal(login))
 				.and(USER.PASSWORD.equal(password)).fetchAny();
 		if (userRecord != null) {
-			user = getUserFromUserRecord(userRecord);
+			user = getUserFromRecord(userRecord);
 		}
 		return user;
 	}
 
-	public static int getIdFromUser(User user) {
-		return getIdFromLogin(user.login);
+	public static int getIdFromLogin(String login) {
+		return getRecordFromLogin(login).getId();
 	}
 
-	public static int getIdFromLogin(String login) {
-		return getDb().selectFrom(USER).where(USER.LOGIN.equal(login)).fetchOne().getId();
+	public static UserRecord getRecordFromLogin(String login) {
+		return getDb().selectFrom(USER).where(USER.LOGIN.equal(login)).fetchOne();
 	}
 
 	public static void setPassword(User user, String password) {
@@ -46,12 +47,17 @@ public class UserDao {
 	}
 
 	public static void setRoom(User user, RoomImpl room) {
-		int roomId = RoomDao.getIdFromRoomImpl(room);
+		int roomId = RoomDao.getIdFromCoordinates(room.getX(), room.getY());
 		getDb().update(USER).set(USER.ROOM, roomId).where(USER.LOGIN.equal(user.login)).execute();
 	}
 
-	public static User getUserFromUserRecord(UserRecord userRecord) {
+	public static User getUserFromRecord(UserRecord userRecord) {
 		return new User(userRecord.getLogin(), UserSize.from_int(userRecord.getSize()), UserMood.from_int(userRecord
 				.getMood()), UserSex.from_int(userRecord.getSex()));
+	}
+
+	public static RoomImpl getRoomFromUser(User user) {
+		RoomRecord roomRecord = getRecordFromLogin(user.login).fetchRoom();
+		return RoomDao.getRoomFromRecord(roomRecord);
 	}
 }

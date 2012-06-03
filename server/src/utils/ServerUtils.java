@@ -24,6 +24,7 @@ import org.omg.PortableServer.Servant;
 
 import server.RoomImpl;
 import server.WorldManagerImpl;
+import dao.RoomDao;
 
 public class ServerUtils {
 
@@ -68,9 +69,10 @@ public class ServerUtils {
 
 	public static void initializeDB(VworldFactory db) {
 		// Batch create rooms
+		int size = 3;
 		List<RoomRecord> roomRecords = new ArrayList<RoomRecord>();
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
 				RoomRecord roomRecord = db.newRecord(ROOM);
 				roomRecord.setName("Room " + i + '-' + j);
 				roomRecord.setX(i);
@@ -79,8 +81,10 @@ public class ServerUtils {
 			}
 		}
 		db.batchStore(roomRecords.toArray(new RoomRecord[roomRecords.size()])).execute();
+		int firstRoomId = RoomDao.getIdFromCoordinates(0, 0);
 		// Create sample users
-		db.insertInto(USER, USER.LOGIN, USER.PASSWORD).values("a", "a").values("b", "b").values("c", "c").execute();
+		db.insertInto(USER, USER.LOGIN, USER.PASSWORD, USER.ROOM).values("a", "a", firstRoomId)
+				.values("b", "b", firstRoomId).values("c", "c", firstRoomId).execute();
 	}
 
 	public static Room getRoomFromPoa(POA rootpoa, RoomImpl roomPoa) {

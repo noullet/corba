@@ -40,20 +40,20 @@ public class WorldManagerImpl extends WorldManagerPOA {
 
 	@Override
 	public LoginDTO login(String login, String password, UserService userService) {
-		User user = UserDao.findByLoginAndPassword(login, password);
+		// TODO manage the case where the user is not found
+		User user = UserDao.getUserFromLoginAndPassword(login, password);
 		if (user != null) {
 			System.out.println("User " + login + " logged in");
 		} else {
 			return null;
 		}
 		// Connect the user to his room
-		// TODO récupérer la room en base
-		RoomImpl roomToConnect = rooms.get(0, 0);
-		Room room = getRoomFromPoa(Server.getRootpoa(), roomToConnect);
-		roomToConnect.login(user, userService);
+		RoomImpl roomImpl = UserDao.getRoomFromUser(user);
+		Room room = getRoomFromPoa(Server.getRootpoa(), roomImpl);
+		roomImpl.login(user, userService);
 		// Retrieve and delete the user's pending messages
-		List<Message> userMessages = MessageDao.getAllMessagesForUser(user);
-		MessageDao.deleteAllMessagesForUser(user);
+		List<Message> userMessages = MessageDao.getMessagesFromUser(user);
+		MessageDao.deleteMessagesFromUser(user);
 		// Return the complete DTO
 		return new LoginDTO(user, room, userMessages.toArray(new Message[userMessages.size()]));
 	}
@@ -76,7 +76,7 @@ public class WorldManagerImpl extends WorldManagerPOA {
 			UserService userService = oldRoomImpl.getUserService(user.login);
 			oldRoomImpl.logout(user);
 			newRoomImpl.login(user, userService);
-			System.out.println("User " + user.login + " change room " + oldRoomImpl.name() + " to "
+			System.out.println("User " + user.login + " changed room " + oldRoomImpl.name() + " to "
 					+ newRoomImpl.name());
 			return getRoomFromPoa(Server.getRootpoa(), newRoomImpl);
 		}

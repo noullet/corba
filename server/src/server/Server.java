@@ -16,7 +16,7 @@ public class Server {
 	private static ORB orb;
 	private static POA rootpoa;
 	private static VworldFactory db;
-	private static final boolean SHOULD_INITIALIZE_DB = false;
+	private static final boolean SHOULD_INITIALIZE_DB = true;
 
 	public static void main(String[] args) {
 		Connection connection = null;
