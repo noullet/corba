@@ -4,6 +4,10 @@
 
 package ui;
 
+import java.awt.event.*;
+import javax.swing.event.*;
+
+import interfaces.Message;
 import interfaces.Orientation;
 import interfaces.UserMood;
 import interfaces.UserSex;
@@ -17,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -28,6 +33,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+
+import utils.ClientUtils;
 
 import client.Client;
 import client.UserManager;
@@ -101,12 +108,27 @@ public class MainFrame extends JFrame {
 		}
 	}
 
+	private void list1ValueChanged(ListSelectionEvent e) {
+		String login = (String)this.list1.getSelectedValue();
+		Client.getUserManager().getInformation(login);
+	}
+
+	private void quitActionPerformed(ActionEvent e) {
+		Client.getUserManager().logout();
+	}
+
+	private void thisWindowClosing(WindowEvent e) {
+		Client.getUserManager().logout();
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Bertrand Pages
 		menuBar1 = new JMenuBar();
 		menu1 = new JMenu();
+		initSystemeMenu = new JMenuItem();
+		menuItem1 = new JMenuItem();
 		menu2 = new JMenu();
 		northMenu = new JMenuItem();
 		southMenu = new JMenuItem();
@@ -139,6 +161,12 @@ public class MainFrame extends JFrame {
 
 		//======== this ========
 		setTitle("PizzaChat");
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				thisWindowClosing(e);
+			}
+		});
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
@@ -148,6 +176,20 @@ public class MainFrame extends JFrame {
 			//======== menu1 ========
 			{
 				menu1.setText("File");
+
+				//---- initSystemeMenu ----
+				initSystemeMenu.setText("Initialiser le syst\u00e8me");
+				menu1.add(initSystemeMenu);
+
+				//---- menuItem1 ----
+				menuItem1.setText("Quit");
+				menuItem1.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						quitActionPerformed(e);
+					}
+				});
+				menu1.add(menuItem1);
 			}
 			menuBar1.add(menu1);
 
@@ -382,6 +424,14 @@ public class MainFrame extends JFrame {
 
 			//======== scrollPane3 ========
 			{
+
+				//---- list1 ----
+				list1.addListSelectionListener(new ListSelectionListener() {
+					@Override
+					public void valueChanged(ListSelectionEvent e) {
+						list1ValueChanged(e);
+					}
+				});
 				scrollPane3.setViewportView(list1);
 			}
 			splitPane2.setRightComponent(scrollPane3);
@@ -397,6 +447,8 @@ public class MainFrame extends JFrame {
 	// Generated using JFormDesigner Evaluation license - Bertrand Pages
 	private JMenuBar menuBar1;
 	private JMenu menu1;
+	private JMenuItem initSystemeMenu;
+	private JMenuItem menuItem1;
 	private JMenu menu2;
 	private JMenuItem northMenu;
 	private JMenuItem southMenu;
@@ -429,11 +481,13 @@ public class MainFrame extends JFrame {
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	private DefaultListModel<String> connectedList;
-	private UserManager userManager;
 
-	public void initialize(UserManager userManager){
-		this.chatArea.setEditable(false);
-		this.userManager = userManager;		
+	public void initialize(){
+		this.chatArea.setEditable(false);	
+	}
+	
+	public void hideAdmin(){
+		this.initSystemeMenu.setVisible(false);
 	}
 	
 	public void updateListConnected(String[] listConnected) {
@@ -445,16 +499,16 @@ public class MainFrame extends JFrame {
 		this.scrollPane3.updateUI();
 	}
 
-	public void newMessage(String username, String message) {
-		this.updateChatArea(username + " : " + message + "\n");
+	public void newMessage(String username, String message, String date) {
+		this.updateChatArea(username + " [" + date + "] : " + message + "\n");
 	}
 	
-	public void newSingleMessage(String username, String message){
-		this.updateChatArea("From " + username + " : " + message + "\n");
+	public void newSingleMessage(String username, String message, String date){
+		this.updateChatArea("From " + username + " [" + date + "] : " + message + "\n");
 	}
 	
-	public void newSendSingleMessage(String username, String message){
-		this.updateChatArea("To " + username + " : " + message + "\n");
+	public void newSendSingleMessage(String username, String message, String date){
+		this.updateChatArea("To " + username + " [" + date + "] : " + message + "\n");
 	}
 
 	public void newConnection(String username, String roomName) {
@@ -534,6 +588,14 @@ public class MainFrame extends JFrame {
 	
 	public void newLogout(String username) {
 		this.updateChatArea(username + " s'est déconnecté de la salle\n");
+	}
+	
+	public void showOldMessages(Message[] messages){
+		for (Message message : messages) {
+			Date date = new Date(message.timestamp);
+			String formattedDate = ClientUtils.getDateString(date);
+			newSingleMessage(message.sender, message.content, formattedDate);
+		}
 	}
 
 }

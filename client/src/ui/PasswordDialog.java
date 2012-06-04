@@ -34,6 +34,12 @@ public class PasswordDialog extends JDialog {
 		super(owner);
 		initComponents();
 	}
+	
+	public PasswordDialog(Frame owner, String password) {
+		super(owner);
+		this.password = password;
+		initComponents();
+	}
 
 	private void okButtonActionPerformed(ActionEvent e) {
 		this.setVisible(false);
@@ -79,6 +85,7 @@ public class PasswordDialog extends JDialog {
 				// ---- label1 ----
 				label1.setText("Votre mot de passe est : ");
 				contentPanel.add(label1);
+				passwordValue.setText(password);
 				contentPanel.add(passwordValue);
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
@@ -119,11 +126,8 @@ public class PasswordDialog extends JDialog {
 	private JLabel passwordValue;
 	private JPanel buttonBar;
 	private JButton okButton;
+	private String password;
 
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
-	public void setPasswordValue(String password) {
-		this.passwordValue.setText(password);
-		contentPanel.updateUI();
-	}
 }

@@ -52,10 +52,10 @@ public class UserManager {
 		if (loginDTO != null) {
 			this.user = loginDTO.user;
 			this.room = loginDTO.room;
-			ClientUtils.printMessages(loginDTO.pendingMessages);
 			mainFrame.setVisible(true);
 			mainFrame.updateListConnected(room.loginList());
 			mainFrame.newConnection(user.login, room.name());
+			mainFrame.showOldMessages(loginDTO.pendingMessages);
 		} else {
 			LoginDialog loginDialog = new LoginDialog(this.mainFrame);
 			loginDialog.setVisible(true);
@@ -93,8 +93,9 @@ public class UserManager {
 		message.sender = user.login;
 		message.receiver = "";
 		message.type = MessageType.BROADCAST;
-		message.timestamp = (new Date()).getTime();
-		mainFrame.newMessage(user.login, content);
+		Date date = new Date();
+		message.timestamp = date.getTime();
+		mainFrame.newMessage(user.login, content, ClientUtils.getDateString(date));
 		room.sendMessage(message);
 	}
 
@@ -109,16 +110,18 @@ public class UserManager {
 		message.sender = user.login;
 		message.receiver = split[1];
 		message.type = MessageType.SINGLECAST;
-		message.timestamp = (new Date()).getTime();
-		mainFrame.newSendSingleMessage(message.receiver, newContent.toString());
+		Date date = new Date();
+		message.timestamp = date.getTime();
+		mainFrame.newSendSingleMessage(message.receiver, newContent.toString(), ClientUtils.getDateString(date));
 		room.sendMessage(message);
 	}
 
 	public void notifyMessage(Message message) {
+		Date date = new Date(message.timestamp);
 		if (message.type == MessageType.BROADCAST) {
-			mainFrame.newMessage(message.sender, message.content);
+			mainFrame.newMessage(message.sender, message.content, ClientUtils.getDateString(date));
 		} else {
-			mainFrame.newSingleMessage(message.sender, message.content);
+			mainFrame.newSingleMessage(message.sender, message.content, ClientUtils.getDateString(date));
 		}
 
 	}
@@ -154,54 +157,23 @@ public class UserManager {
 	}
 
 	public void sendRegister(String login) {
-		String password = worldManager.register(login);
-		PasswordDialog passwordDial = new PasswordDialog(mainFrame);
-		passwordDial.setPasswordValue(password);
-		passwordDial.setVisible(true);
+		String password = worldManager.register(login);	
+		PasswordDialog passwordDial = new PasswordDialog(mainFrame, password);
+		passwordDial.setVisible(true);		
+	}
+	
+	public void getInformation(String login){
+		
 	}
 
 	private void initializeMainFrame() {
 		this.mainFrame = new MainFrame();
-		this.mainFrame.initialize(this);
-		this.mainFrame.addWindowListener(new WindowListener() {
-
-			@Override
-			public void windowOpened(WindowEvent arg0) {
-
-			}
-
-			@Override
-			public void windowIconified(WindowEvent arg0) {
-
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent arg0) {
-
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent arg0) {
-
-			}
-
-			@Override
-			public void windowClosing(WindowEvent arg0) {
-				worldManager.logout(user, room);
-				System.exit(0);
-			}
-
-			@Override
-			public void windowClosed(WindowEvent arg0) {
-
-			}
-
-			@Override
-			public void windowActivated(WindowEvent arg0) {
-
-			}
-		});
-
+		this.mainFrame.initialize();
+	}
+	
+	public void logout(){
+		worldManager.logout(user, room);
+		System.exit(0);
 	}
 
 }
