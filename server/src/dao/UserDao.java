@@ -48,8 +48,10 @@ public class UserDao {
 	}
 
 	public static User getUserFromRecord(UserRecord userRecord) {
+		int adminIntValue = new Integer(userRecord.getAdmin());
+		boolean isAdmin = (adminIntValue != 0);
 		return new User(userRecord.getLogin(), UserSize.from_int(userRecord.getSize()), UserMood.from_int(userRecord
-				.getMood()), UserSex.from_int(userRecord.getSex()));
+				.getMood()), UserSex.from_int(userRecord.getSex()), isAdmin);
 	}
 
 	public static int[] getRoomCoordinatesFromUser(User user) {

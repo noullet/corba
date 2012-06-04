@@ -13,8 +13,6 @@ import interfaces.UserSex;
 import interfaces.UserSize;
 import interfaces.WorldManager;
 
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Date;
 
 import ui.LoginDialog;
@@ -51,6 +49,7 @@ public class UserManager {
 		LoginDTO loginDTO = worldManager.login(login, password, service);
 		if (loginDTO != null) {
 			this.user = loginDTO.user;
+			System.out.println("User is admin : " + user.isAdmin);
 			this.room = loginDTO.room;
 			mainFrame.setVisible(true);
 			mainFrame.updateListConnected(room.loginList());
@@ -157,21 +156,21 @@ public class UserManager {
 	}
 
 	public void sendRegister(String login) {
-		String password = worldManager.register(login);	
+		String password = worldManager.register(login);
 		PasswordDialog passwordDial = new PasswordDialog(mainFrame, password);
-		passwordDial.setVisible(true);		
+		passwordDial.setVisible(true);
 	}
-	
-	public void getInformation(String login){
-		
+
+	public void getInformation(String login) {
+
 	}
 
 	private void initializeMainFrame() {
 		this.mainFrame = new MainFrame();
 		this.mainFrame.initialize();
 	}
-	
-	public void logout(){
+
+	public void logout() {
 		worldManager.logout(user, room);
 		System.exit(0);
 	}

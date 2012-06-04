@@ -27,6 +27,7 @@ module interfaces {
 		UserSize size;
 		UserMood mood;
 		UserSex sex;
+		boolean isAdmin;
 	};
 		
 	struct Message {

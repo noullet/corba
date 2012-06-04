@@ -46,9 +46,7 @@ public class ServerUtils {
 		} else if (Orientation.NORTH.equals(orientation)) {
 			y--;
 		}
-		int[] coordinates = new int[2];
-		coordinates[0] = x;
-		coordinates[1] = y;
+		int[] coordinates = { x, y };
 		return coordinates;
 	}
 
@@ -85,6 +83,8 @@ public class ServerUtils {
 		// Create sample users
 		db.insertInto(USER, USER.LOGIN, USER.PASSWORD, USER.ROOM).values("a", "a", firstRoomId)
 				.values("b", "b", firstRoomId).values("c", "c", firstRoomId).execute();
+		db.insertInto(USER, USER.LOGIN, USER.PASSWORD, USER.ROOM, USER.ADMIN)
+				.values("admin", "admin", firstRoomId, (new Integer(1)).byteValue()).execute();
 	}
 
 	public static Room getRoomFromPoa(POA rootpoa, RoomImpl roomPoa) {

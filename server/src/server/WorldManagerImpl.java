@@ -39,7 +39,7 @@ public class WorldManagerImpl extends WorldManagerPOA {
 
 	@Override
 	public String register(String login) {
-		User user = new User(login, UserSize.MOYEN, UserMood.CONTENT, UserSex.MALE);
+		User user = new User(login, UserSize.MOYEN, UserMood.CONTENT, UserSex.MALE, false);
 		String password = generateRandomPassword();
 		RoomImpl defaultRoom = rooms.get(0, 0);
 		UserDao.saveUser(user, password, defaultRoom);
