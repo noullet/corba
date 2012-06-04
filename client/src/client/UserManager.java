@@ -19,6 +19,8 @@ import java.util.Date;
 
 import ui.LoginDialog;
 import ui.MainFrame;
+import ui.PasswordDialog;
+import ui.RegisterDialog;
 import utils.ClientUtils;
 
 public class UserManager {
@@ -148,6 +150,20 @@ public class UserManager {
 	public void notifyLogout(User user) {
 		mainFrame.newLogout(user.login);
 		mainFrame.updateListConnected(room.loginList());
+	}
+	
+	public void register(){
+		RegisterDialog register = new RegisterDialog(mainFrame);
+		register.setVisible(true);
+	}
+	
+	public void sendRegister(String login){
+		
+	}
+	
+	public void showPassword(String password){
+		PasswordDialog passwordDial = new PasswordDialog(mainFrame);
+		passwordDial.setPasswordValue(password);
 	}
 
 	private void initializeMainFrame() {

@@ -103,6 +103,7 @@ public class RoomImpl extends RoomPOA {
 	public void login(User user, UserService newUserService) {
 		this.users.put(user.login, newUserService);
 		for (String key : this.users().keySet()) {
+			System.out.println(key);
 			if (!key.equals(user.login)) {
 				this.users().get(key).notifyConnection(user);
 			}

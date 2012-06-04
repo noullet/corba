@@ -5,37 +5,20 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
-			addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "dialogKeyPressed", true ) )
+			"title": "Enregistrement d'un nouvel utilisateur"
 			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "thisWindowClosing", true ) )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 				name: "dialogPane"
 				"border": new javax.swing.border.EmptyBorder( 12, 12, 12, 12 )
-				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridLayout ) {
-					"columns": 2
-					"rows": 2
-				} ) {
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
 					name: "contentPanel"
-					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
-						name: "panel1"
-						addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "dialogKeyPressed", true ) )
-						add( new FormComponent( "javax.swing.JLabel" ) {
-							name: "label1"
-							"text": "Login : "
-						} )
-						add( new FormComponent( "javax.swing.JTextField" ) {
-							name: "textField1"
-							"columns": 35
-							addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "dialogKeyPressed", true ) )
-						} )
-						add( new FormComponent( "javax.swing.JLabel" ) {
-							name: "label2"
-							"text": "Password : "
-						} )
-						add( new FormComponent( "javax.swing.JPasswordField" ) {
-							name: "passwordField1"
-							"columns": 35
-							addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "dialogKeyPressed", true ) )
-						} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label1"
+						"text": "Login : "
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "loginField"
+						"columns": 25
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "Center"
@@ -49,14 +32,9 @@ new FormModel {
 					name: "buttonBar"
 					"border": new javax.swing.border.EmptyBorder( 12, 0, 0, 0 )
 					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "registerButton"
+						name: "okButton"
 						"text": "S'enregistrer"
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "registerActionPerformed", true ) )
-					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "okButton"
-						"text": "Login"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "okButtonActionPerformed", true ) )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 						"gridx": 1
 						"gridy": 0
@@ -64,7 +42,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "cancelButton"
 						"text": "Cancel"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancelButtonActionPerformed", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancelActionPerformed", true ) )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 						"gridx": 2
 						"gridy": 0
