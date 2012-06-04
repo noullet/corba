@@ -48,11 +48,19 @@ public class ClientUtils {
 		}
 		for (Message message : messages) {
 			Date date = new Date(message.timestamp);
-			SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-			String formattedDate = formatter.format(date);
+			String formattedDate = getDateString(date);
 			System.out.println("User : " + message.receiver);
 			System.out.println(formattedDate + " - " + message.sender + ": " + message.content);
 		}
+	}
+
+	public static String getDateNow() {
+		return getDateString(new Date());
+	}
+
+	public static String getDateString(Date date) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+		return formatter.format(date);
 	}
 
 	public static UserService getUserServiceFromPoa(POA rootpoa, UserServiceImpl userServicePoa) {

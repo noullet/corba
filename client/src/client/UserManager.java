@@ -77,10 +77,6 @@ public class UserManager {
 		mainFrame.newSize(user.login, size);
 	}
 
-	public void changePassword(String password) {
-		room.changePassword(user, password);
-	}
-
 	public void changeRoom(Orientation orientation) {
 		Room oldRoom = room;
 		room = worldManager.changeRoom(room, user, orientation);

@@ -45,9 +45,10 @@ public class WorldManagerImpl extends WorldManagerPOA {
 		if (user != null) {
 			System.out.println("User " + login + " logged in");
 			// Connect the user to his room
-			RoomImpl roomImpl = UserDao.getRoomFromUser(user);
-			Room room = getRoomFromPoa(Server.getRootpoa(), roomImpl);
+			int[] coordinates = UserDao.getRoomCoordinatesFromUser(user);
+			RoomImpl roomImpl = rooms.get(coordinates[0], coordinates[1]);
 			roomImpl.login(user, userService);
+			Room room = getRoomFromPoa(Server.getRootpoa(), roomImpl);
 			// Retrieve and delete the user's pending messages
 			List<Message> userMessages = MessageDao.getMessagesFromUser(user);
 			MessageDao.deleteMessagesFromUser(user);

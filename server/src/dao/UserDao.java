@@ -30,10 +30,6 @@ public class UserDao {
 		return getDb().selectFrom(USER).where(USER.LOGIN.equal(login)).fetchOne();
 	}
 
-	public static void setPassword(User user, String password) {
-		getDb().update(USER).set(USER.PASSWORD, password).where(USER.LOGIN.equal(user.login)).execute();
-	}
-
 	public static void setMood(User user, UserMood mood) {
 		getDb().update(USER).set(USER.MOOD, mood.value()).where(USER.LOGIN.equal(user.login)).execute();
 	}
@@ -56,8 +52,9 @@ public class UserDao {
 				.getMood()), UserSex.from_int(userRecord.getSex()));
 	}
 
-	public static RoomImpl getRoomFromUser(User user) {
+	public static int[] getRoomCoordinatesFromUser(User user) {
 		RoomRecord roomRecord = getRecordFromLogin(user.login).fetchRoom();
-		return RoomDao.getRoomFromRecord(roomRecord);
+		int[] coordinates = { roomRecord.getX(), roomRecord.getY() };
+		return coordinates;
 	}
 }

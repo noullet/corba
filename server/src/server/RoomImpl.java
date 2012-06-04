@@ -50,11 +50,6 @@ public class RoomImpl extends RoomPOA {
 	}
 
 	@Override
-	public void changePassword(User user, String password) {
-		UserDao.setPassword(user, password);
-	}
-
-	@Override
 	public User changeSize(User user, UserSize size) {
 		user.size = size;
 		UserDao.setSize(user, size);
