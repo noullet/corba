@@ -57,4 +57,10 @@ public class UserDao {
 		int[] coordinates = { roomRecord.getX(), roomRecord.getY() };
 		return coordinates;
 	}
+
+	public static void saveUser(User user, String password, RoomImpl room) {
+		int roomId = RoomDao.getIdFromCoordinates(room.getX(), room.getY());
+		getDb().insertInto(USER, USER.LOGIN, USER.SIZE, USER.MOOD, USER.SEX, USER.PASSWORD, USER.ROOM)
+				.values(user.login, user.size.value(), user.mood.value(), user.sex.value(), password, roomId).execute();
+	}
 }

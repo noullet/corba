@@ -147,19 +147,17 @@ public class UserManager {
 		mainFrame.newLogout(user.login);
 		mainFrame.updateListConnected(room.loginList());
 	}
-	
-	public void register(){
+
+	public void register() {
 		RegisterDialog register = new RegisterDialog(mainFrame);
 		register.setVisible(true);
 	}
-	
-	public void sendRegister(String login){
-		
-	}
-	
-	public void showPassword(String password){
+
+	public void sendRegister(String login) {
+		String password = worldManager.register(login);
 		PasswordDialog passwordDial = new PasswordDialog(mainFrame);
 		passwordDial.setPasswordValue(password);
+		passwordDial.setVisible(true);
 	}
 
 	private void initializeMainFrame() {

@@ -1,5 +1,6 @@
 package server;
 
+import static utils.ServerUtils.generateRandomPassword;
 import static utils.ServerUtils.getImplFromRoom;
 import static utils.ServerUtils.getRoomFromPoa;
 import interfaces.Admin;
@@ -8,7 +9,10 @@ import interfaces.Message;
 import interfaces.Orientation;
 import interfaces.Room;
 import interfaces.User;
+import interfaces.UserMood;
 import interfaces.UserService;
+import interfaces.UserSex;
+import interfaces.UserSize;
 import interfaces.WorldManagerPOA;
 
 import java.util.List;
@@ -35,7 +39,12 @@ public class WorldManagerImpl extends WorldManagerPOA {
 
 	@Override
 	public String register(String login) {
-		return null;
+		User user = new User(login, UserSize.MOYEN, UserMood.CONTENT, UserSex.MALE);
+		String password = generateRandomPassword();
+		RoomImpl defaultRoom = rooms.get(0, 0);
+		UserDao.saveUser(user, password, defaultRoom);
+		System.out.println("User " + login + " registered");
+		return password;
 	}
 
 	@Override

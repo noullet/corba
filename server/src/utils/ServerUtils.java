@@ -108,4 +108,8 @@ public class ServerUtils {
 		}
 		return null;
 	}
+
+	public static String generateRandomPassword() {
+		return "password";
+	}
 }
