@@ -4,8 +4,6 @@
 
 package ui;
 
-import java.awt.event.*;
-import javax.swing.*;
 import interfaces.Message;
 import interfaces.Orientation;
 import interfaces.User;
@@ -20,6 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Date;
@@ -35,8 +35,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.JTextField;
 
 import utils.ClientUtils;
 import client.Client;
@@ -119,7 +118,7 @@ public class MainFrame extends JFrame {
 	}
 
 	private void list1MouseClicked(MouseEvent e) {
-		if(!this.list1.isSelectionEmpty()){
+		if (!this.list1.isSelectionEmpty()) {
 			String login = (String) this.list1.getSelectedValue();
 			User user = Client.getUserManager().getUserInRoom(login);
 			InformationDialog info = new InformationDialog(this, user);
@@ -164,7 +163,7 @@ public class MainFrame extends JFrame {
 		scrollPane3 = new JScrollPane();
 		list1 = new JList();
 
-		//======== this ========
+		// ======== this ========
 		setTitle("PizzaChat");
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -175,18 +174,18 @@ public class MainFrame extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
-		//======== menuBar1 ========
+		// ======== menuBar1 ========
 		{
 
-			//======== menu1 ========
+			// ======== menu1 ========
 			{
 				menu1.setText("File");
 
-				//---- initSystemeMenu ----
+				// ---- initSystemeMenu ----
 				initSystemeMenu.setText("Initialiser le syst\u00e8me");
 				menu1.add(initSystemeMenu);
 
-				//---- menuItem1 ----
+				// ---- menuItem1 ----
 				menuItem1.setText("Quit");
 				menuItem1.addActionListener(new ActionListener() {
 					@Override
@@ -198,11 +197,11 @@ public class MainFrame extends JFrame {
 			}
 			menuBar1.add(menu1);
 
-			//======== menu2 ========
+			// ======== menu2 ========
 			{
 				menu2.setText("Room");
 
-				//---- northMenu ----
+				// ---- northMenu ----
 				northMenu.setText("Nord");
 				northMenu.addActionListener(new ActionListener() {
 					@Override
@@ -212,7 +211,7 @@ public class MainFrame extends JFrame {
 				});
 				menu2.add(northMenu);
 
-				//---- southMenu ----
+				// ---- southMenu ----
 				southMenu.setText("Sud");
 				southMenu.addActionListener(new ActionListener() {
 					@Override
@@ -222,7 +221,7 @@ public class MainFrame extends JFrame {
 				});
 				menu2.add(southMenu);
 
-				//---- eastMenu ----
+				// ---- eastMenu ----
 				eastMenu.setText("Est");
 				eastMenu.addActionListener(new ActionListener() {
 					@Override
@@ -232,7 +231,7 @@ public class MainFrame extends JFrame {
 				});
 				menu2.add(eastMenu);
 
-				//---- WestMenu ----
+				// ---- WestMenu ----
 				WestMenu.setText("Ouest");
 				WestMenu.addActionListener(new ActionListener() {
 					@Override
@@ -244,11 +243,11 @@ public class MainFrame extends JFrame {
 			}
 			menuBar1.add(menu2);
 
-			//======== menu3 ========
+			// ======== menu3 ========
 			{
 				menu3.setText("Humeur");
 
-				//---- contentMenu ----
+				// ---- contentMenu ----
 				contentMenu.setText("Content");
 				contentMenu.addActionListener(new ActionListener() {
 					@Override
@@ -258,7 +257,7 @@ public class MainFrame extends JFrame {
 				});
 				menu3.add(contentMenu);
 
-				//---- tristeMenu ----
+				// ---- tristeMenu ----
 				tristeMenu.setText("Triste");
 				tristeMenu.addActionListener(new ActionListener() {
 					@Override
@@ -268,7 +267,7 @@ public class MainFrame extends JFrame {
 				});
 				menu3.add(tristeMenu);
 
-				//---- effrayeMenu ----
+				// ---- effrayeMenu ----
 				effrayeMenu.setText("Effray\u00e9");
 				effrayeMenu.addActionListener(new ActionListener() {
 					@Override
@@ -278,7 +277,7 @@ public class MainFrame extends JFrame {
 				});
 				menu3.add(effrayeMenu);
 
-				//---- inquietMenu ----
+				// ---- inquietMenu ----
 				inquietMenu.setText("Inquiet");
 				inquietMenu.addActionListener(new ActionListener() {
 					@Override
@@ -288,7 +287,7 @@ public class MainFrame extends JFrame {
 				});
 				menu3.add(inquietMenu);
 
-				//---- hilareMenu ----
+				// ---- hilareMenu ----
 				hilareMenu.setText("Hilare");
 				hilareMenu.addActionListener(new ActionListener() {
 					@Override
@@ -300,11 +299,11 @@ public class MainFrame extends JFrame {
 			}
 			menuBar1.add(menu3);
 
-			//======== menu4 ========
+			// ======== menu4 ========
 			{
 				menu4.setText("Taille");
 
-				//---- geantMenu ----
+				// ---- geantMenu ----
 				geantMenu.setText("G\u00e9ant");
 				geantMenu.addActionListener(new ActionListener() {
 					@Override
@@ -314,7 +313,7 @@ public class MainFrame extends JFrame {
 				});
 				menu4.add(geantMenu);
 
-				//---- grandMenu ----
+				// ---- grandMenu ----
 				grandMenu.setText("Grand");
 				grandMenu.addActionListener(new ActionListener() {
 					@Override
@@ -324,7 +323,7 @@ public class MainFrame extends JFrame {
 				});
 				menu4.add(grandMenu);
 
-				//---- moyenMenu ----
+				// ---- moyenMenu ----
 				moyenMenu.setText("Moyen");
 				moyenMenu.addActionListener(new ActionListener() {
 					@Override
@@ -334,7 +333,7 @@ public class MainFrame extends JFrame {
 				});
 				menu4.add(moyenMenu);
 
-				//---- petitMenu ----
+				// ---- petitMenu ----
 				petitMenu.setText("Petit");
 				petitMenu.addActionListener(new ActionListener() {
 					@Override
@@ -344,7 +343,7 @@ public class MainFrame extends JFrame {
 				});
 				menu4.add(petitMenu);
 
-				//---- nainMenu ----
+				// ---- nainMenu ----
 				nainMenu.setText("Nain");
 				nainMenu.addActionListener(new ActionListener() {
 					@Override
@@ -356,11 +355,11 @@ public class MainFrame extends JFrame {
 			}
 			menuBar1.add(menu4);
 
-			//======== menu5 ========
+			// ======== menu5 ========
 			{
 				menu5.setText("Sexe");
 
-				//---- hommeMenu ----
+				// ---- hommeMenu ----
 				hommeMenu.setText("Homme");
 				hommeMenu.addActionListener(new ActionListener() {
 					@Override
@@ -370,7 +369,7 @@ public class MainFrame extends JFrame {
 				});
 				menu5.add(hommeMenu);
 
-				//---- femmeMenu ----
+				// ---- femmeMenu ----
 				femmeMenu.setText("Femme");
 				femmeMenu.addActionListener(new ActionListener() {
 					@Override
@@ -384,12 +383,12 @@ public class MainFrame extends JFrame {
 		}
 		setJMenuBar(menuBar1);
 
-		//======== splitPane1 ========
+		// ======== splitPane1 ========
 		{
 			splitPane1.setResizeWeight(0.8);
 			splitPane1.setEnabled(false);
 
-			//---- messageToSend ----
+			// ---- messageToSend ----
 			messageToSend.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
@@ -398,7 +397,7 @@ public class MainFrame extends JFrame {
 			});
 			splitPane1.setLeftComponent(messageToSend);
 
-			//---- button1 ----
+			// ---- button1 ----
 			button1.setText("Envoyer");
 			button1.addActionListener(new ActionListener() {
 				@Override
@@ -410,22 +409,22 @@ public class MainFrame extends JFrame {
 		}
 		contentPane.add(splitPane1, BorderLayout.SOUTH);
 
-		//======== splitPane2 ========
+		// ======== splitPane2 ========
 		{
 			splitPane2.setEnabled(false);
 			splitPane2.setResizeWeight(0.8);
 			splitPane2.setPreferredSize(new Dimension(132, 46));
 
-			//======== scrollPane2 ========
+			// ======== scrollPane2 ========
 			{
 				scrollPane2.setViewportView(chatArea);
 			}
 			splitPane2.setLeftComponent(scrollPane2);
 
-			//======== scrollPane3 ========
+			// ======== scrollPane3 ========
 			{
 
-				//---- list1 ----
+				// ---- list1 ----
 				list1.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -510,11 +509,27 @@ public class MainFrame extends JFrame {
 		this.updateChatArea("To " + username + " [" + date + "] : " + message + "\n");
 	}
 
-	public void newConnection(String username, String roomName) {
-		this.updateChatArea(username + " s'est connecté à la salle " + roomName + "\n");
+	public void newLogin(String username) {
+		newUserInformation(username, "s'est connecté à");
 	}
-	
-	public void setTitleFrame(String room){
+
+	public void newEnterRoom(String username) {
+		newUserInformation(username, "est entré dans");
+	}
+
+	public void newLogout(String username) {
+		newUserInformation(username, "s'est déconnecté de");
+	}
+
+	public void newLeaveRoom(String username) {
+		newUserInformation(username, "est sorti de");
+	}
+
+	private void newUserInformation(String username, String message) {
+		this.updateChatArea(username + " " + message + " la salle\n");
+	}
+
+	public void setTitleFrame(String room) {
 		this.setTitle("PizzaChat - " + room);
 	}
 
@@ -587,10 +602,6 @@ public class MainFrame extends JFrame {
 		} else {
 			Client.getUserManager().sendBroadCastMessage(message);
 		}
-	}
-
-	public void newLogout(String username) {
-		this.updateChatArea(username + " s'est déconnecté de la salle\n");
 	}
 
 	public void showOldMessages(Message[] messages) {

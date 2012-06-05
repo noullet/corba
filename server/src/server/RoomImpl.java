@@ -14,21 +14,20 @@ import java.util.List;
 import java.util.Map;
 
 import dao.MessageDao;
+import dao.RoomDao;
 import dao.UserDao;
 
 public class RoomImpl extends RoomPOA {
 
 	private String name;
 	private Map<String, UserService> connectedUsers = new HashMap<String, UserService>();
-	private List<User> allUsers;
 	private int x;
 	private int y;
 
-	public RoomImpl(String name, int x, int y, List<User> initialUsers) {
+	public RoomImpl(String name, int x, int y) {
 		this.name = name;
 		this.x = x;
 		this.y = y;
-		this.allUsers = initialUsers;
 	}
 
 	@Override
@@ -43,6 +42,7 @@ public class RoomImpl extends RoomPOA {
 
 	@Override
 	public User[] allUsers() {
+		List<User> allUsers = RoomDao.getUsersFromCoordinates(x, y);
 		return allUsers.toArray(new User[allUsers.size()]);
 	}
 
@@ -108,18 +108,30 @@ public class RoomImpl extends RoomPOA {
 	}
 
 	public void login(User user, UserService newUserService) {
-		connectedUsers.put(user.login, newUserService);
-		for (String key : connectedUsers.keySet()) {
-			if (!key.equals(user.login)) {
-				connectedUsers.get(key).notifyConnection(user);
-			}
+		for (UserService userService : connectedUsers.values()) {
+			userService.notifyLogin(user);
 		}
+		connectedUsers.put(user.login, newUserService);
 	}
 
 	public void logout(User user) {
 		connectedUsers.remove(user.login);
-		for (String key : connectedUsers.keySet()) {
-			connectedUsers.get(key).notifyLogout(user);
+		for (UserService userService : connectedUsers.values()) {
+			userService.notifyLogout(user);
+		}
+	}
+
+	public void enterRoom(User user, UserService newUserService) {
+		for (UserService userService : connectedUsers.values()) {
+			userService.notifyEnterRoom(user);
+		}
+		connectedUsers.put(user.login, newUserService);
+	}
+
+	public void leaveRoom(User user) {
+		connectedUsers.remove(user.login);
+		for (UserService userService : connectedUsers.values()) {
+			userService.notifyLeaveRoom(user);
 		}
 	}
 

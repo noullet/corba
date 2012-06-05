@@ -56,7 +56,9 @@ module interfaces {
 	 	
 	interface UserService {		
 		void notifyMessage(in Message message);
-		void notifyConnection(in User user);
+		void notifyEnterRoom(in User user);
+		void notifyLeaveRoom(in User user);
+		void notifyLogin(in User user);
 		void notifyLogout(in User user);
 		void notifyChangeSize(in User user, in UserSize size);	
 		void notifyChangeMood(in User user, in UserMood mood);	

@@ -16,7 +16,7 @@ import com.google.common.collect.Table;
 public class RoomDao {
 
 	public static int getIdFromCoordinates(int x, int y) {
-		return getDb().selectFrom(ROOM).where(ROOM.X.equal(x)).and(ROOM.Y.equal(y)).fetchOne().getId();
+		return getRecordFromCoordinates(x, y).getId();
 	}
 
 	public static Table<Integer, Integer, RoomImpl> findAllRooms() {
@@ -30,9 +30,19 @@ public class RoomDao {
 	}
 
 	public static RoomImpl getRoomFromRecord(RoomRecord roomRecord) {
+
+		return new RoomImpl(roomRecord.getName(), roomRecord.getX(), roomRecord.getY());
+	}
+
+	public static RoomRecord getRecordFromCoordinates(int x, int y) {
+		return getDb().selectFrom(ROOM).where(ROOM.X.equal(x)).and(ROOM.Y.equal(y)).fetchOne();
+	}
+
+	public static List<User> getUsersFromCoordinates(int x, int y) {
+		RoomRecord roomRecord = getRecordFromCoordinates(x, y);
 		List<UserRecord> userRecords = roomRecord.fetchUserList();
 		List<User> users = UserDao.getUsersFromRecords(userRecords);
-		return new RoomImpl(roomRecord.getName(), roomRecord.getX(), roomRecord.getY(), users);
+		return users;
 	}
 
 }

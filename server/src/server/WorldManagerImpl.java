@@ -84,8 +84,8 @@ public class WorldManagerImpl extends WorldManagerPOA {
 		} else {
 			UserDao.setRoom(user, newRoomImpl);
 			UserService userService = oldRoomImpl.getUserService(user.login);
-			oldRoomImpl.logout(user);
-			newRoomImpl.login(user, userService);
+			oldRoomImpl.leaveRoom(user);
+			newRoomImpl.enterRoom(user, userService);
 			System.out.println("User " + user.login + " changed room " + oldRoomImpl.name() + " to "
 					+ newRoomImpl.name());
 			return getRoomFromPoa(Server.getRootpoa(), newRoomImpl);

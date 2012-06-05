@@ -15,8 +15,8 @@ public class UserServiceImpl extends UserServicePOA {
 	}
 
 	@Override
-	public void notifyConnection(User user) {
-		Client.getUserManager().notifyConnection(user);
+	public void notifyLogin(User user) {
+		Client.getUserManager().notifyLogin(user);
 	}
 
 	@Override
@@ -37,5 +37,15 @@ public class UserServiceImpl extends UserServicePOA {
 	@Override
 	public void notifyLogout(User user) {
 		Client.getUserManager().notifyLogout(user);
+	}
+
+	@Override
+	public void notifyEnterRoom(User user) {
+		Client.getUserManager().notifyEnterRoom(user);
+	}
+
+	@Override
+	public void notifyLeaveRoom(User user) {
+		Client.getUserManager().notifyLeaveRoom(user);
 	}
 }

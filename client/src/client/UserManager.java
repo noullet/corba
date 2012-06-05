@@ -53,22 +53,25 @@ public class UserManager {
 		enterRoom(loginDTO.room);
 		mainFrame.setVisible(true);
 		mainFrame.updateListConnected(connectedUsers);
-		mainFrame.newConnection(user.login, room.name());
+		mainFrame.newLogin(user.login);
 		mainFrame.showOldMessages(loginDTO.pendingMessages);
 	}
 
 	public void changeMood(UserMood mood) {
 		user = room.changeMood(user, mood);
+		allUsers.put(user.login, user);
 		mainFrame.newMood(user.login, mood);
 	}
 
 	public void changeSex(UserSex sex) {
 		user = room.changeSex(user, sex);
+		allUsers.put(user.login, user);
 		mainFrame.newSex(user.login, sex);
 	}
 
 	public void changeSize(UserSize size) {
 		user = room.changeSize(user, size);
+		allUsers.put(user.login, user);
 		mainFrame.newSize(user.login, size);
 	}
 
@@ -77,7 +80,7 @@ public class UserManager {
 		if (!newRoom.equals(room)) {
 			enterRoom(newRoom);
 			mainFrame.clearChatArea();
-			mainFrame.newConnection(user.login, room.name());
+			mainFrame.newEnterRoom(user.login);
 			mainFrame.updateListConnected(connectedUsers);
 		}
 	}
@@ -121,21 +124,24 @@ public class UserManager {
 
 	}
 
-	public void notifyConnection(User user) {
+	public void notifyLogin(User user) {
 		connectedUsers.add(user.login);
-		mainFrame.newConnection(user.login, room.name());
+		mainFrame.newLogin(user.login);
 		mainFrame.updateListConnected(connectedUsers);
 	}
 
 	public void notifyChangeSize(User user, UserSize size) {
+		allUsers.put(user.login, user);
 		mainFrame.newSize(user.login, size);
 	}
 
 	public void notifyChangeSex(User user, UserSex sex) {
+		allUsers.put(user.login, user);
 		mainFrame.newSex(user.login, sex);
 	}
 
 	public void notifyChangeMood(User user, UserMood mood) {
+		allUsers.put(user.login, user);
 		mainFrame.newMood(user.login, mood);
 	}
 
@@ -143,6 +149,16 @@ public class UserManager {
 		connectedUsers.remove(user.login);
 		mainFrame.newLogout(user.login);
 		mainFrame.updateListConnected(connectedUsers);
+	}
+
+	public void notifyEnterRoom(User user) {
+		allUsers.put(user.login, user);
+		mainFrame.newEnterRoom(user.login);
+	}
+
+	public void notifyLeaveRoom(User user) {
+		allUsers.remove(user.login);
+		mainFrame.newLeaveRoom(user.login);
 	}
 
 	public void register() {
