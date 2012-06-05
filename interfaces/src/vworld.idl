@@ -42,6 +42,7 @@ module interfaces {
 	typedef sequence<User> Users;
 	typedef sequence<Message> Messages;
 	typedef sequence<string> Logins;
+	typedef sequence<string> RoomNames;
 				
 	struct LoginDTO {
 		User user;
@@ -68,6 +69,7 @@ module interfaces {
 		void logout(in User user, in Room room);
 		Users adminGetAllUsers(in string adminLogin, in string adminPassword);
 		Users adminGetConnectedUsers(in string adminLogin, in string adminPassword);
+		RoomNames adminGetAllRooms(in string adminLogin, in string adminPassword);
 		void adminKickUser(in string adminLogin, in string adminPassword, in User user);
 		void adminInitialize(in string adminLogin, in string adminPassword);
 	};
