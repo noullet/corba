@@ -5,6 +5,7 @@
 package ui;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -12,13 +13,18 @@ import javax.swing.border.*;
  * @author Bertrand Pages
  */
 public class ConfirmKickDialog extends JDialog {
+	private AdminFrame adminFrame;
+	private String login;
+	
 	public ConfirmKickDialog(Frame owner) {
-		super(owner);
-		initComponents();
+		new ConfirmKickDialog((AdminFrame)owner, "Unknow");
 	}
 	
 	public ConfirmKickDialog(AdminFrame owner, String login){
-		
+		super(owner);
+		this.adminFrame = owner;
+		this.login = login;
+		initComponents();
 	}
 
 	public ConfirmKickDialog(Dialog owner) {
@@ -26,17 +32,37 @@ public class ConfirmKickDialog extends JDialog {
 		initComponents();
 	}
 
+	private void KickActionPerformed(ActionEvent e) {
+		adminFrame.kickUser(login);
+		this.setVisible(false);
+	}
+
+	private void cancelButtonActionPerformed(ActionEvent e) {
+		this.setVisible(false);
+	}
+
+	private void thisWindowClosing(WindowEvent e) {
+		this.setVisible(false);
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Bertrand Pages
 		dialogPane = new JPanel();
 		contentPanel = new JPanel();
+		label2 = new JLabel();
 		label1 = new JLabel();
 		buttonBar = new JPanel();
 		text = new JButton();
 		cancelButton = new JButton();
 
 		//======== this ========
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				thisWindowClosing(e);
+			}
+		});
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
@@ -57,8 +83,12 @@ public class ConfirmKickDialog extends JDialog {
 			{
 				contentPanel.setLayout(new FlowLayout());
 
+				//---- label2 ----
+				label2.setText("\u00cates vous sur de vouloir expulser : ");
+				contentPanel.add(label2);
+
 				//---- label1 ----
-				label1.setText("text");
+				label1.setText(login);
 				contentPanel.add(label1);
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
@@ -71,13 +101,25 @@ public class ConfirmKickDialog extends JDialog {
 				((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0, 0.0};
 
 				//---- text ----
-				text.setText("Expulser");
+				text.setText("Oui");
+				text.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						KickActionPerformed(e);
+					}
+				});
 				buttonBar.add(text, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 5), 0, 0));
 
 				//---- cancelButton ----
-				cancelButton.setText("Cancel");
+				cancelButton.setText("Non");
+				cancelButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						cancelButtonActionPerformed(e);
+					}
+				});
 				buttonBar.add(cancelButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 0), 0, 0));
@@ -94,6 +136,7 @@ public class ConfirmKickDialog extends JDialog {
 	// Generated using JFormDesigner Evaluation license - Bertrand Pages
 	private JPanel dialogPane;
 	private JPanel contentPanel;
+	private JLabel label2;
 	private JLabel label1;
 	private JPanel buttonBar;
 	private JButton text;

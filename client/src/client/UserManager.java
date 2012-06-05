@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import ui.AdminFrame;
 import ui.LoginDialog;
 import ui.MainFrame;
 import ui.PasswordDialog;
@@ -51,6 +52,9 @@ public class UserManager {
 		LoginDTO loginDTO = worldManager.login(login, password, service);
 		this.user = loginDTO.user;
 		enterRoom(loginDTO.room);
+		if(!user.isAdmin){
+			mainFrame.hideAdmin();
+		}
 		mainFrame.setVisible(true);
 		mainFrame.updateListConnected(connectedUsers);
 		mainFrame.newLogin(user.login);
@@ -185,6 +189,14 @@ public class UserManager {
 		worldManager.logout(user, room);
 		System.exit(0);
 	}
+	
+	public void showAdminFrame(){
+		AdminFrame adminFrame = new AdminFrame();
+		User[] users = new User[1];
+		users[0] = user;
+		adminFrame.initialiseListUser(users);
+		adminFrame.setVisible(true);
+	}
 
 	private void enterRoom(Room newRoom) {
 		room = newRoom;
@@ -194,5 +206,11 @@ public class UserManager {
 			allUsers.put(user.login, user);
 		}
 		connectedUsers = new HashSet<String>(Arrays.asList(room.connectedUsers()));
+	}
+	
+	public void kick(String login){
+		if(user.isAdmin){
+			//Kick
+		}
 	}
 }

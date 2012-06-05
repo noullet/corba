@@ -126,6 +126,10 @@ public class MainFrame extends JFrame {
 		}
 	}
 
+	private void adminMenuActionPerformed(ActionEvent e) {
+		Client.getUserManager().showAdminFrame();
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
@@ -133,6 +137,7 @@ public class MainFrame extends JFrame {
 		menuBar1 = new JMenuBar();
 		menu1 = new JMenu();
 		initSystemeMenu = new JMenuItem();
+		adminMenu = new JMenuItem();
 		menuItem1 = new JMenuItem();
 		menu2 = new JMenu();
 		northMenu = new JMenuItem();
@@ -185,7 +190,17 @@ public class MainFrame extends JFrame {
 				initSystemeMenu.setText("Initialiser le syst\u00e8me");
 				menu1.add(initSystemeMenu);
 
-				// ---- menuItem1 ----
+				//---- adminMenu ----
+				adminMenu.setText("Paneau d'administration");
+				adminMenu.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						adminMenuActionPerformed(e);
+					}
+				});
+				menu1.add(adminMenu);
+
+				//---- menuItem1 ----
 				menuItem1.setText("Quit");
 				menuItem1.addActionListener(new ActionListener() {
 					@Override
@@ -447,6 +462,7 @@ public class MainFrame extends JFrame {
 	private JMenuBar menuBar1;
 	private JMenu menu1;
 	private JMenuItem initSystemeMenu;
+	private JMenuItem adminMenu;
 	private JMenuItem menuItem1;
 	private JMenu menu2;
 	private JMenuItem northMenu;
@@ -486,6 +502,7 @@ public class MainFrame extends JFrame {
 
 	public void hideAdmin() {
 		this.initSystemeMenu.setVisible(false);
+		this.adminMenu.setVisible(false);
 	}
 
 	public void updateListConnected(Set<String> logins) {

@@ -1,7 +1,9 @@
 package dao;
 
 import static generated.tables.Message.MESSAGE;
+import static generated.tables.User.USER;
 import static server.Server.getDb;
+import generated.VworldFactory;
 import generated.tables.records.MessageRecord;
 import generated.tables.records.UserRecord;
 import interfaces.Message;
@@ -9,6 +11,7 @@ import interfaces.MessageType;
 import interfaces.User;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Function;
@@ -49,5 +52,15 @@ public class MessageDao {
 		int receiverId = UserDao.getIdFromLogin(message.receiver);
 		getDb().insertInto(MESSAGE, MESSAGE.CONTENT, MESSAGE.SENDER, MESSAGE.RECEIVER, MESSAGE.DATE)
 				.values(message.content, senderId, receiverId, new Date(message.timestamp)).execute();
+	}
+	
+	public static List<Message> wsGetMessagesFromCredentials(String login, String password, VworldFactory db) {
+		UserRecord userRecord = db.selectFrom(USER).where(USER.LOGIN.equal(login)).and(USER.PASSWORD.equal(password)).fetchAny();
+		if(userRecord != null) {
+			List<MessageRecord> messageRecords = db.selectFrom(MESSAGE).where(MESSAGE.RECEIVER.equal(userRecord.getId()))
+				.fetch();
+			return getMessagesFromRecords(messageRecords);
+		}
+		return new ArrayList<Message>();
 	}
 }

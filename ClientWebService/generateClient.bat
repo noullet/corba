@@ -1,0 +1,1 @@
+wsimport -d bin -s src -p client http://localhost:8080/PizzaChat?wsdl

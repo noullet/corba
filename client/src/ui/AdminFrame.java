@@ -4,26 +4,45 @@
 
 package ui;
 
+import interfaces.User;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 
+import client.Client;
+
 /**
  * @author Bertrand Pages
  */
 public class AdminFrame extends JFrame {
+	private DefaultListModel<String> userList;
 	public AdminFrame() {
 		initComponents();
+		this.setTitle("Panneau d'administration");
 	}
 
 	private void closeActionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
 
-	private void listUserValueChanged(ListSelectionEvent e) {
-		
+	private void listUserMouseClicked(MouseEvent e) {
+		if(!this.listUser.isSelectionEmpty()){
+			String login = (String) this.listUser.getSelectedValue();
+			User user = Client.getUserManager().getUserInRoom(login);
+			InformationDialog info = new InformationDialog(this, user);
+			info.setVisible(true);
+		}
+	}
+
+	private void kickButtonActionPerformed(ActionEvent e) {
+		if(!this.listUser.isSelectionEmpty()){
+			String login = this.listUser.getSelectedValue();
+			ConfirmKickDialog confirm = new ConfirmKickDialog(this, login);
+			confirm.setVisible(true);			
+		}
 	}
 
 	private void initComponents() {
@@ -33,8 +52,9 @@ public class AdminFrame extends JFrame {
 		contentPanel = new JPanel();
 		label1 = new JLabel();
 		scrollPane1 = new JScrollPane();
-		listUser = new JList();
+		listUser = new JList<String>();
 		buttonBar = new JPanel();
+		kickButton = new JButton();
 		okButton = new JButton();
 
 		//======== this ========
@@ -66,10 +86,10 @@ public class AdminFrame extends JFrame {
 				{
 
 					//---- listUser ----
-					listUser.addListSelectionListener(new ListSelectionListener() {
+					listUser.addMouseListener(new MouseAdapter() {
 						@Override
-						public void valueChanged(ListSelectionEvent e) {
-							listUserValueChanged(e);
+						public void mouseClicked(MouseEvent e) {
+							listUserMouseClicked(e);
 						}
 					});
 					scrollPane1.setViewportView(listUser);
@@ -84,6 +104,18 @@ public class AdminFrame extends JFrame {
 				buttonBar.setLayout(new GridBagLayout());
 				((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
 				((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+
+				//---- kickButton ----
+				kickButton.setText("Expulser s\u00e9lectionn\u00e9");
+				kickButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						kickButtonActionPerformed(e);
+					}
+				});
+				buttonBar.add(kickButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 0, 5), 0, 0));
 
 				//---- okButton ----
 				okButton.setText("Fermer");
@@ -111,12 +143,24 @@ public class AdminFrame extends JFrame {
 	private JPanel contentPanel;
 	private JLabel label1;
 	private JScrollPane scrollPane1;
-	private JList listUser;
+	private JList<String> listUser;
 	private JPanel buttonBar;
+	private JButton kickButton;
 	private JButton okButton;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 	
-	private void kickUser(){
-		
+	
+	public void kickUser(String login){
+		Client.getUserManager().kick(login);
+		userList.removeElement(login);
+	}
+	
+	public void initialiseListUser(User[] users){
+		userList = new DefaultListModel<String>();
+		for (User user: users) {
+			userList.addElement(user.login);
+		}
+		this.listUser.setModel(userList);
+		this.scrollPane1.updateUI();
 	}
 }
