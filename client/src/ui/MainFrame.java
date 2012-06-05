@@ -121,6 +121,10 @@ public class MainFrame extends JFrame {
 	private void list1MouseClicked(MouseEvent e) {
 		if (!this.list1.isSelectionEmpty()) {
 			String login = (String) this.list1.getSelectedValue();
+			if(login.startsWith("-")){
+				String[] temp = login.split(" ");
+				login = temp[1];
+			}
 			User user = Client.getUserManager().getUserInRoom(login);
 			InformationDialog info = new InformationDialog(this, user);
 			info.setVisible(true);
