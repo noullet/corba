@@ -37,8 +37,5 @@ public class UserServiceImpl extends UserServicePOA {
 	@Override
 	public void notifyLogout(User user) {
 		Client.getUserManager().notifyLogout(user);
-		
 	}
 }
-
-

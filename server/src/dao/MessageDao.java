@@ -20,11 +20,7 @@ public class MessageDao {
 		int receiverId = UserDao.getIdFromLogin(user.login);
 		List<MessageRecord> messageRecords = getDb().selectFrom(MESSAGE).where(MESSAGE.RECEIVER.equal(receiverId))
 				.fetch();
-		return Lists.transform(messageRecords, new Function<MessageRecord, Message>() {
-			public Message apply(MessageRecord messageRecord) {
-				return getMessageFromRecord(messageRecord);
-			}
-		});
+		return getMessagesFromRecords(messageRecords);
 	}
 
 	public static void deleteMessagesFromUser(User user) {
@@ -38,6 +34,14 @@ public class MessageDao {
 		long timestamp = messageRecord.getDate().getTime();
 		return new Message(sender.getLogin(), receiver.getLogin(), messageRecord.getContent(), timestamp,
 				MessageType.SINGLECAST);
+	}
+
+	public static List<Message> getMessagesFromRecords(List<MessageRecord> messageRecords) {
+		return Lists.transform(messageRecords, new Function<MessageRecord, Message>() {
+			public Message apply(MessageRecord messageRecord) {
+				return getMessageFromRecord(messageRecord);
+			}
+		});
 	}
 
 	public static void saveMessage(Message message) {

@@ -8,7 +8,13 @@ import interfaces.User;
 import interfaces.UserMood;
 import interfaces.UserSex;
 import interfaces.UserSize;
+
+import java.util.List;
+
 import server.RoomImpl;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 public class UserDao {
 
@@ -52,6 +58,14 @@ public class UserDao {
 		boolean isAdmin = (adminIntValue != 0);
 		return new User(userRecord.getLogin(), UserSize.from_int(userRecord.getSize()), UserMood.from_int(userRecord
 				.getMood()), UserSex.from_int(userRecord.getSex()), isAdmin);
+	}
+
+	public static List<User> getUsersFromRecords(List<UserRecord> userRecords) {
+		return Lists.transform(userRecords, new Function<UserRecord, User>() {
+			public User apply(UserRecord userRecord) {
+				return getUserFromRecord(userRecord);
+			}
+		});
 	}
 
 	public static int[] getRoomCoordinatesFromUser(User user) {

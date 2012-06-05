@@ -13,7 +13,12 @@ import interfaces.UserSex;
 import interfaces.UserSize;
 import interfaces.WorldManager;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import ui.LoginDialog;
 import ui.MainFrame;
@@ -27,6 +32,8 @@ public class UserManager {
 	private User user;
 	private Room room;
 	private MainFrame mainFrame;
+	private Map<String, User> allUsers;
+	private Set<String> connectedUsers;
 
 	public UserManager(WorldManager worldManager) {
 		this.worldManager = worldManager;
@@ -40,25 +47,14 @@ public class UserManager {
 	}
 
 	public void login(String login, String password) {
-		UserService service = null;
-		try {
-			service = getUserServiceFromPoa(Client.getRootpoa(), new UserServiceImpl());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		UserService service = getUserServiceFromPoa(Client.getRootpoa(), new UserServiceImpl());
 		LoginDTO loginDTO = worldManager.login(login, password, service);
-		if (loginDTO != null) {
-			this.user = loginDTO.user;
-			System.out.println("User is admin : " + user.isAdmin);
-			this.room = loginDTO.room;
-			mainFrame.setVisible(true);
-			mainFrame.updateListConnected(room.loginList());
-			mainFrame.newConnection(user.login, room.name());
-			mainFrame.showOldMessages(loginDTO.pendingMessages);
-		} else {
-			LoginDialog loginDialog = new LoginDialog(this.mainFrame);
-			loginDialog.setVisible(true);
-		}
+		this.user = loginDTO.user;
+		enterRoom(loginDTO.room);
+		mainFrame.setVisible(true);
+		mainFrame.updateListConnected(connectedUsers);
+		mainFrame.newConnection(user.login, room.name());
+		mainFrame.showOldMessages(loginDTO.pendingMessages);
 	}
 
 	public void changeMood(UserMood mood) {
@@ -77,12 +73,12 @@ public class UserManager {
 	}
 
 	public void changeRoom(Orientation orientation) {
-		Room oldRoom = room;
-		room = worldManager.changeRoom(room, user, orientation);
-		if (!oldRoom.equals(room)) {
+		Room newRoom = worldManager.changeRoom(room, user, orientation);
+		if (!newRoom.equals(room)) {
+			enterRoom(newRoom);
 			mainFrame.clearChatArea();
 			mainFrame.newConnection(user.login, room.name());
-			mainFrame.updateListConnected(room.loginList());
+			mainFrame.updateListConnected(connectedUsers);
 		}
 	}
 
@@ -126,11 +122,9 @@ public class UserManager {
 	}
 
 	public void notifyConnection(User user) {
-		if (user.login.equals(this.user.login)) {
-			mainFrame.clearChatArea();
-		}
+		connectedUsers.add(user.login);
 		mainFrame.newConnection(user.login, room.name());
-		mainFrame.updateListConnected(room.loginList());
+		mainFrame.updateListConnected(connectedUsers);
 	}
 
 	public void notifyChangeSize(User user, UserSize size) {
@@ -146,8 +140,9 @@ public class UserManager {
 	}
 
 	public void notifyLogout(User user) {
+		connectedUsers.remove(user.login);
 		mainFrame.newLogout(user.login);
-		mainFrame.updateListConnected(room.loginList());
+		mainFrame.updateListConnected(connectedUsers);
 	}
 
 	public void register() {
@@ -161,8 +156,8 @@ public class UserManager {
 		passwordDial.setVisible(true);
 	}
 
-	public void getInformation(String login) {
-
+	public User getUserInRoom(String login) {
+		return allUsers.get(login);
 	}
 
 	private void initializeMainFrame() {
@@ -175,4 +170,12 @@ public class UserManager {
 		System.exit(0);
 	}
 
+	private void enterRoom(Room newRoom) {
+		room = newRoom;
+		allUsers = new HashMap<String, User>();
+		for (User user : room.allUsers()) {
+			allUsers.put(user.login, user);
+		}
+		connectedUsers = new HashSet<String>(Arrays.asList(room.connectedUsers()));
+	}
 }

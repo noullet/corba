@@ -3,6 +3,8 @@ package dao;
 import static generated.tables.Room.ROOM;
 import static server.Server.getDb;
 import generated.tables.records.RoomRecord;
+import generated.tables.records.UserRecord;
+import interfaces.User;
 
 import java.util.List;
 
@@ -28,7 +30,9 @@ public class RoomDao {
 	}
 
 	public static RoomImpl getRoomFromRecord(RoomRecord roomRecord) {
-		return new RoomImpl(roomRecord.getName(), roomRecord.getX(), roomRecord.getY());
+		List<UserRecord> userRecords = roomRecord.fetchUserList();
+		List<User> users = UserDao.getUsersFromRecords(userRecords);
+		return new RoomImpl(roomRecord.getName(), roomRecord.getX(), roomRecord.getY(), users);
 	}
 
 }
