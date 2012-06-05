@@ -16,7 +16,6 @@ public class Server {
 	private static ORB orb;
 	private static POA rootpoa;
 	private static VworldFactory db;
-	private static final boolean SHOULD_INITIALIZE_DB = false;
 
 	public static void main(String[] args) {
 		Connection connection = null;
@@ -24,9 +23,7 @@ public class Server {
 			// Initialisation de la BDD
 			Connection connexion = ServerUtils.getDbConnection();
 			db = new VworldFactory(connexion);
-			if (SHOULD_INITIALIZE_DB) {
-				ServerUtils.initializeDB(db);
-			}
+			ServerUtils.initializeDbIfEmpty();
 			// Enregistrement et lancement du serveur
 			orb = ORB.init(args, null);
 			rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));

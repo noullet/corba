@@ -6,6 +6,7 @@ import generated.tables.records.RoomRecord;
 import generated.tables.records.UserRecord;
 import interfaces.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import server.RoomImpl;
@@ -14,6 +15,10 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 public class RoomDao {
+
+	public static int getNbRoom() {
+		return getDb().selectCount().from(ROOM).fetchOne(0, Integer.class);
+	}
 
 	public static int getIdFromCoordinates(int x, int y) {
 		return getRecordFromCoordinates(x, y).getId();
@@ -45,4 +50,22 @@ public class RoomDao {
 		return users;
 	}
 
+	public static void deleteAllRooms() {
+		getDb().delete(ROOM).execute();
+	}
+
+	public static void createInitRooms() {
+		int size = 3;
+		List<RoomRecord> roomRecords = new ArrayList<RoomRecord>();
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				RoomRecord roomRecord = getDb().newRecord(ROOM);
+				roomRecord.setName("Room " + i + '-' + j);
+				roomRecord.setX(i);
+				roomRecord.setY(j);
+				roomRecords.add(roomRecord);
+			}
+		}
+		getDb().batchStore(roomRecords.toArray(new RoomRecord[roomRecords.size()])).execute();
+	}
 }

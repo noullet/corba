@@ -48,4 +48,9 @@ public class UserServiceImpl extends UserServicePOA {
 	public void notifyLeaveRoom(User user) {
 		Client.getUserManager().notifyLeaveRoom(user);
 	}
+
+	@Override
+	public void kick() {
+		Client.getUserManager().kick();
+	}
 }

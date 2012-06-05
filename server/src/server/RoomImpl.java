@@ -138,4 +138,8 @@ public class RoomImpl extends RoomPOA {
 	public UserService getUserService(String login) {
 		return connectedUsers.get(login);
 	}
+
+	public Map<String, UserService> getConnectedUsers() {
+		return connectedUsers;
+	}
 }

@@ -1,9 +1,5 @@
 package utils;
 
-import static generated.tables.Room.ROOM;
-import static generated.tables.User.USER;
-import generated.VworldFactory;
-import generated.tables.records.RoomRecord;
 import interfaces.Orientation;
 import interfaces.Room;
 import interfaces.RoomHelper;
@@ -12,8 +8,6 @@ import interfaces.WorldManagerHelper;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
@@ -24,7 +18,9 @@ import org.omg.PortableServer.Servant;
 
 import server.RoomImpl;
 import server.WorldManagerImpl;
+import dao.MessageDao;
 import dao.RoomDao;
+import dao.UserDao;
 
 public class ServerUtils {
 
@@ -65,28 +61,6 @@ public class ServerUtils {
 		ncRef.rebind(path, worldManager);
 	}
 
-	public static void initializeDB(VworldFactory db) {
-		// Batch create rooms
-		int size = 3;
-		List<RoomRecord> roomRecords = new ArrayList<RoomRecord>();
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				RoomRecord roomRecord = db.newRecord(ROOM);
-				roomRecord.setName("Room " + i + '-' + j);
-				roomRecord.setX(i);
-				roomRecord.setY(j);
-				roomRecords.add(roomRecord);
-			}
-		}
-		db.batchStore(roomRecords.toArray(new RoomRecord[roomRecords.size()])).execute();
-		int firstRoomId = RoomDao.getIdFromCoordinates(0, 0);
-		// Create sample users
-		db.insertInto(USER, USER.LOGIN, USER.PASSWORD, USER.ROOM).values("a", "a", firstRoomId)
-				.values("b", "b", firstRoomId).values("c", "c", firstRoomId).execute();
-		db.insertInto(USER, USER.LOGIN, USER.PASSWORD, USER.ROOM, USER.ADMIN)
-				.values("admin", "admin", firstRoomId, (new Integer(1)).byteValue()).execute();
-	}
-
 	public static Room getRoomFromPoa(POA rootpoa, RoomImpl roomPoa) {
 		org.omg.CORBA.Object roomObject;
 		try {
@@ -111,5 +85,34 @@ public class ServerUtils {
 
 	public static String generateRandomPassword() {
 		return "password";
+	}
+
+	public static boolean byteToBoolean(byte byteValue) {
+		int intValue = new Integer(byteValue);
+		return (intValue != 0);
+	}
+
+	public static byte booleanToByte(boolean boolValue) {
+		int intValue = boolValue ? 1 : 0;
+		return new Integer(intValue).byteValue();
+	}
+
+	public static void initializeDbIfEmpty() {
+		if (RoomDao.getNbRoom() == 0 && UserDao.getNbRoom() == 0) {
+			initializeDb();
+		}
+	}
+
+	// Need the DB to be empty
+	public static void initializeDb() {
+		RoomDao.createInitRooms();
+		UserDao.createInitUsers();
+	}
+
+	public static void reinitializeDb() {
+		MessageDao.deleteAllMessages();
+		UserDao.deleteAllUsers();
+		RoomDao.deleteAllRooms();
+		initializeDb();
 	}
 }

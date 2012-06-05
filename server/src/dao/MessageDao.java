@@ -53,14 +53,19 @@ public class MessageDao {
 		getDb().insertInto(MESSAGE, MESSAGE.CONTENT, MESSAGE.SENDER, MESSAGE.RECEIVER, MESSAGE.DATE)
 				.values(message.content, senderId, receiverId, new Date(message.timestamp)).execute();
 	}
-	
+
 	public static List<Message> wsGetMessagesFromCredentials(String login, String password, VworldFactory db) {
-		UserRecord userRecord = db.selectFrom(USER).where(USER.LOGIN.equal(login)).and(USER.PASSWORD.equal(password)).fetchAny();
-		if(userRecord != null) {
-			List<MessageRecord> messageRecords = db.selectFrom(MESSAGE).where(MESSAGE.RECEIVER.equal(userRecord.getId()))
-				.fetch();
+		UserRecord userRecord = db.selectFrom(USER).where(USER.LOGIN.equal(login)).and(USER.PASSWORD.equal(password))
+				.fetchAny();
+		if (userRecord != null) {
+			List<MessageRecord> messageRecords = db.selectFrom(MESSAGE)
+					.where(MESSAGE.RECEIVER.equal(userRecord.getId())).fetch();
 			return getMessagesFromRecords(messageRecords);
 		}
 		return new ArrayList<Message>();
+	}
+
+	public static void deleteAllMessages() {
+		getDb().delete(MESSAGE).execute();
 	}
 }

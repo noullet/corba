@@ -2,6 +2,7 @@ package dao;
 
 import static generated.tables.User.USER;
 import static server.Server.getDb;
+import static utils.ServerUtils.byteToBoolean;
 import generated.tables.records.RoomRecord;
 import generated.tables.records.UserRecord;
 import interfaces.User;
@@ -18,6 +19,10 @@ import com.google.common.collect.Lists;
 
 public class UserDao {
 
+	public static int getNbRoom() {
+		return getDb().selectCount().from(USER).fetchOne(0, Integer.class);
+	}
+
 	public static User getUserFromLoginAndPassword(String login, String password) {
 		User user = null;
 		UserRecord userRecord = getDb().selectFrom(USER).where(USER.LOGIN.equal(login))
@@ -26,6 +31,15 @@ public class UserDao {
 			user = getUserFromRecord(userRecord);
 		}
 		return user;
+	}
+
+	public static boolean isAdmin(String login, String password) {
+		User user = getUserFromLoginAndPassword(login, password);
+		if (user != null) {
+			return user.isAdmin;
+		} else {
+			return false;
+		}
 	}
 
 	public static int getIdFromLogin(String login) {
@@ -54,8 +68,7 @@ public class UserDao {
 	}
 
 	public static User getUserFromRecord(UserRecord userRecord) {
-		int adminIntValue = new Integer(userRecord.getAdmin());
-		boolean isAdmin = (adminIntValue != 0);
+		boolean isAdmin = byteToBoolean(userRecord.getAdmin());
 		return new User(userRecord.getLogin(), UserSize.from_int(userRecord.getSize()), UserMood.from_int(userRecord
 				.getMood()), UserSex.from_int(userRecord.getSex()), isAdmin);
 	}
@@ -78,5 +91,23 @@ public class UserDao {
 		int roomId = RoomDao.getIdFromCoordinates(room.getX(), room.getY());
 		getDb().insertInto(USER, USER.LOGIN, USER.SIZE, USER.MOOD, USER.SEX, USER.PASSWORD, USER.ROOM)
 				.values(user.login, user.size.value(), user.mood.value(), user.sex.value(), password, roomId).execute();
+	}
+
+	public static List<User> getAllUsers() {
+		List<UserRecord> userRecords = getDb().selectFrom(USER).orderBy(USER.LOGIN).fetch();
+		return getUsersFromRecords(userRecords);
+	}
+
+	public static void deleteAllUsers() {
+		getDb().delete(USER).execute();
+	}
+
+	public static void createInitUsers() {
+		int firstRoomId = RoomDao.getIdFromCoordinates(0, 0);
+		// Create sample users
+		getDb().insertInto(USER, USER.LOGIN, USER.PASSWORD, USER.ROOM).values("a", "a", firstRoomId)
+				.values("b", "b", firstRoomId).values("c", "c", firstRoomId).execute();
+		getDb().insertInto(USER, USER.LOGIN, USER.PASSWORD, USER.ROOM, USER.ADMIN)
+				.values("admin", "admin", firstRoomId, (new Integer(1)).byteValue()).execute();
 	}
 }

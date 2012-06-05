@@ -3,7 +3,6 @@ package server;
 import static utils.ServerUtils.generateRandomPassword;
 import static utils.ServerUtils.getImplFromRoom;
 import static utils.ServerUtils.getRoomFromPoa;
-import interfaces.Admin;
 import interfaces.LoginDTO;
 import interfaces.Message;
 import interfaces.Orientation;
@@ -15,7 +14,11 @@ import interfaces.UserSex;
 import interfaces.UserSize;
 import interfaces.WorldManagerPOA;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import utils.ServerUtils;
 
@@ -69,11 +72,6 @@ public class WorldManagerImpl extends WorldManagerPOA {
 	}
 
 	@Override
-	public Admin loginAdmin(String login, String password) {
-		return null;
-	}
-
-	@Override
 	public Room changeRoom(Room oldRoom, User user, Orientation orientation) {
 		RoomImpl oldRoomImpl = getImplFromRoom(Server.getRootpoa(), oldRoom);
 		int[] coordinates = ServerUtils.getNewCoordinates(oldRoomImpl.getX(), oldRoomImpl.getY(), orientation);
@@ -97,5 +95,62 @@ public class WorldManagerImpl extends WorldManagerPOA {
 		RoomImpl roomImpl = getImplFromRoom(Server.getRootpoa(), room);
 		roomImpl.logout(user);
 		System.out.println("User " + user.login + " logged out");
+	}
+
+	@Override
+	public User[] adminGetAllUsers(String login, String password) {
+		if (UserDao.isAdmin(login, password)) {
+			List<User> users = UserDao.getAllUsers();
+			return users.toArray(new User[users.size()]);
+		} else {
+			System.out.println("Error : User " + login + " is not admin");
+			return new User[0];
+		}
+	}
+
+	@Override
+	public User[] adminGetConnectedUsers(String login, String password) {
+		if (UserDao.isAdmin(login, password)) {
+			Set<String> connectedUserLogins = new HashSet<String>();
+			for (RoomImpl room : rooms.values()) {
+				connectedUserLogins.addAll(room.getConnectedUsers().keySet());
+			}
+			List<User> allUsers = UserDao.getAllUsers();
+			List<User> connectedUsers = new ArrayList<User>();
+			for (User user : allUsers) {
+				if (connectedUserLogins.contains(user.login)) {
+					connectedUsers.add(user);
+				}
+			}
+			return connectedUsers.toArray(new User[connectedUsers.size()]);
+		} else {
+			System.out.println("Error : User " + login + " is not admin");
+			return new User[0];
+		}
+	}
+
+	@Override
+	public void adminKickUser(String login, String password, User userToKick) {
+		if (UserDao.isAdmin(login, password)) {
+			for (RoomImpl room : rooms.values()) {
+				Map<String, UserService> userServices = room.getConnectedUsers();
+				if (userServices.containsKey(userToKick.login)) {
+					UserService userServiceToKick = userServices.get(userToKick.login);
+					userServiceToKick.kick();
+					break;
+				}
+			}
+		} else {
+			System.out.println("Error : User " + login + " is not admin");
+		}
+	}
+
+	@Override
+	public void adminInitialize(String login, String password) {
+		if (UserDao.isAdmin(login, password)) {
+			ServerUtils.reinitializeDb();
+		} else {
+			System.out.println("Error : User " + login + " is not admin");
+		}
 	}
 }

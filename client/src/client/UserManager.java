@@ -35,6 +35,7 @@ public class UserManager {
 	private MainFrame mainFrame;
 	private Map<String, User> allUsers;
 	private Set<String> connectedUsers;
+	private String adminPassword;
 
 	public UserManager(WorldManager worldManager) {
 		this.worldManager = worldManager;
@@ -52,13 +53,16 @@ public class UserManager {
 		LoginDTO loginDTO = worldManager.login(login, password, service);
 		this.user = loginDTO.user;
 		enterRoom(loginDTO.room);
-		if(!user.isAdmin){
+		if (!user.isAdmin) {
 			mainFrame.hideAdmin();
 		}
 		mainFrame.setVisible(true);
 		mainFrame.updateListConnected(connectedUsers);
 		mainFrame.newLogin(user.login);
 		mainFrame.showOldMessages(loginDTO.pendingMessages);
+		if (this.user.isAdmin) {
+			this.adminPassword = password;
+		}
 	}
 
 	public void changeMood(UserMood mood) {
@@ -189,8 +193,8 @@ public class UserManager {
 		worldManager.logout(user, room);
 		System.exit(0);
 	}
-	
-	public void showAdminFrame(){
+
+	public void showAdminFrame() {
 		AdminFrame adminFrame = new AdminFrame();
 		User[] users = new User[1];
 		users[0] = user;
@@ -207,10 +211,22 @@ public class UserManager {
 		}
 		connectedUsers = new HashSet<String>(Arrays.asList(room.connectedUsers()));
 	}
-	
-	public void kick(String login){
-		if(user.isAdmin){
-			//Kick
-		}
+
+	public void kick() {
+		worldManager.logout(user, room);
+		mainFrame.dispose();
+	}
+
+	public void adminKick(User user) {
+		worldManager.adminKickUser(this.user.login, this.adminPassword, user);
+		System.out.println("The admin kicked " + user.login);
+	}
+
+	public void adminGetConnectedUsers() {
+		User[] connectedUsers = worldManager.adminGetConnectedUsers(user.login, adminPassword);
+	}
+
+	public void adminGetAllUsers() {
+		User[] allUsers = worldManager.adminGetAllUsers(user.login, adminPassword);
 	}
 }

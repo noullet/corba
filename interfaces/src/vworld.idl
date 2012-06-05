@@ -48,11 +48,6 @@ module interfaces {
 		Room room;
 		Messages pendingMessages;
 	};
-	
-	
-	interface Admin {
-		readonly attribute Rooms rooms;
-	};
 	 	
 	interface UserService {		
 		void notifyMessage(in Message message);
@@ -62,15 +57,19 @@ module interfaces {
 		void notifyLogout(in User user);
 		void notifyChangeSize(in User user, in UserSize size);	
 		void notifyChangeMood(in User user, in UserMood mood);	
-		void notifyChangeSex(in User user, in UserSex sex);	
+		void notifyChangeSex(in User user, in UserSex sex);
+		void kick();	
 	};
 	
 	interface WorldManager {
 		string register(in string login);
 		LoginDTO login(in string login, in string password, in UserService userService);
 	    Room changeRoom(in Room oldRoom, in User user, in Orientation orientation);
-		Admin loginAdmin(in string login, in string password);
 		void logout(in User user, in Room room);
+		Users adminGetAllUsers(in string adminLogin, in string adminPassword);
+		Users adminGetConnectedUsers(in string adminLogin, in string adminPassword);
+		void adminKickUser(in string adminLogin, in string adminPassword, in User user);
+		void adminInitialize(in string adminLogin, in string adminPassword);
 	};
 			
 	interface Room {
