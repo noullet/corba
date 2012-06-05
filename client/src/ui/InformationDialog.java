@@ -22,6 +22,13 @@ public class InformationDialog extends JDialog {
 		super(owner);
 		initComponents();
 	}
+	
+	public InformationDialog(Frame owner, User user) {
+		super(owner);
+		this.setValues(user);
+		initComponents();
+		this.setTitle("Informations");
+	}
 
 	public InformationDialog(Dialog owner) {
 		super(owner);
@@ -42,13 +49,9 @@ public class InformationDialog extends JDialog {
 		dialogPane = new JPanel();
 		contentPanel = new JPanel();
 		loginDesc = new JLabel();
-		login = new JLabel();
 		sexDesc = new JLabel();
-		sex = new JLabel();
 		sizeDesc = new JLabel();
-		size = new JLabel();
 		moodDesc = new JLabel();
-		mood = new JLabel();
 		buttonBar = new JPanel();
 		okButton = new JButton();
 
@@ -144,7 +147,12 @@ public class InformationDialog extends JDialog {
 	private JButton okButton;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 	
-	public void setValuesAndShow(User user){
+	public void setValues(User user){
+		this.login = new JLabel();
+		this.sex = new JLabel();
+		this.size = new JLabel();
+		this.mood = new JLabel();
+		
 		this.login.setText(user.login);
 		
 		if(user.mood.equals(UserMood.CONTENT)){
@@ -176,6 +184,6 @@ public class InformationDialog extends JDialog {
 		} else if(user.sex.equals(UserSex.FEMALE)){
 			this.sex.setText("Femme");
 		}
-		this.setVisible(true);
+		
 	}
 }

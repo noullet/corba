@@ -11,12 +11,9 @@ new FormModel {
 				name: "splitPane1"
 				"resizeWeight": 0.8
 				"enabled": false
-				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-					name: "scrollPane1"
-					add( new FormComponent( "javax.swing.JTextArea" ) {
-						name: "messageToSend"
-						addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "messageToSendKeyPressed", true ) )
-					} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "messageToSend"
+					addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "messageToSendKeyPressed", true ) )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "left"
 				} )
@@ -47,7 +44,7 @@ new FormModel {
 					name: "scrollPane3"
 					add( new FormComponent( "javax.swing.JList" ) {
 						name: "list1"
-						addEvent( new FormEvent( "javax.swing.event.ListSelectionListener", "valueChanged", "list1ValueChanged", true ) )
+						addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "list1MouseClicked", true ) )
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "right"

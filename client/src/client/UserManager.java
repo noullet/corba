@@ -172,6 +172,7 @@ public class UserManager {
 
 	private void enterRoom(Room newRoom) {
 		room = newRoom;
+		mainFrame.setTitleFrame(room.name());
 		allUsers = new HashMap<String, User>();
 		for (User user : room.allUsers()) {
 			allUsers.put(user.login, user);
