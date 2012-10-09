@@ -3,7 +3,7 @@ JFDML JFormDesigner: "5.1.0.0.51" Java: "1.7.0_01" encoding: "UTF-8"
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 				name: "dialogPane"
@@ -11,20 +11,14 @@ new FormModel {
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
 					name: "contentPanel"
 					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label1"
-						"text": "Selectionner un utilisateur :"
-					} )
-					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-						name: "scrollPane1"
-						add( new FormComponent( "javax.swing.JList" ) {
-							name: "listUser"
-						} )
+						name: "infoLabel"
+						"text": "text"
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "Center"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-					"$columnSpecs": "0:1.0, 0, 80"
+					"$columnSpecs": "0:1.0, 80"
 					"$rowSpecs": "0"
 					"$hGap": 5
 					"$vGap": 5
@@ -32,23 +26,11 @@ new FormModel {
 					name: "buttonBar"
 					"border": new javax.swing.border.EmptyBorder( 12, 0, 0, 0 )
 					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "kickButton"
-						"text": "Expulser sélectionné"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "kickButtonActionPerformed", true ) )
-					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "infoButton"
-						"text": "Information du selectionné"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "infoButtonActionPerformed", true ) )
+						name: "okButton"
+						"text": "OK"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "okButtonActionPerformed", true ) )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 						"gridx": 1
-					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "okButton"
-						"text": "Fermer"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "closeActionPerformed", true ) )
-					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-						"gridx": 2
 						"gridy": 0
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {

@@ -57,14 +57,29 @@ new FormModel {
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "menu1"
 					"text": "File"
-					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "initSystemeMenu"
-						"text": "Initialiser le système"
-					} )
-					add( new FormComponent( "javax.swing.JMenuItem" ) {
+					add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 						name: "adminMenu"
-						"text": "Paneau d'administration"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "adminMenuActionPerformed", true ) )
+						"text": "Administration"
+						add( new FormComponent( "javax.swing.JMenuItem" ) {
+							name: "kickItem"
+							"text": "Expulser un utilisateur"
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "kickItemActionPerformed", true ) )
+						} )
+						add( new FormComponent( "javax.swing.JMenuItem" ) {
+							name: "listUserItem"
+							"text": "Lister tout les utilisateurs"
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "listUserItemActionPerformed", true ) )
+						} )
+						add( new FormComponent( "javax.swing.JMenuItem" ) {
+							name: "menuItem2"
+							"text": "Lister toutes les salles"
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "listRoomActionPerformed", true ) )
+						} )
+						add( new FormComponent( "javax.swing.JMenuItem" ) {
+							name: "initSystemeMenu"
+							"text": "Initialiser le système"
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "initSystemeMenuActionPerformed", true ) )
+						} )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem1"

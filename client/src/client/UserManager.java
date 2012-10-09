@@ -13,16 +13,19 @@ import interfaces.UserSex;
 import interfaces.UserSize;
 import interfaces.WorldManager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import ui.AdminFrame;
 import ui.LoginDialog;
 import ui.MainFrame;
+import ui.NotifyDialog;
 import ui.PasswordDialog;
 import ui.RegisterDialog;
 import utils.ClientUtils;
@@ -57,7 +60,7 @@ public class UserManager {
 			mainFrame.hideAdmin();
 		}
 		mainFrame.setVisible(true);
-		mainFrame.updateListConnected(connectedUsers);
+		mainFrame.updateListConnected(getAllUserInRoom());
 		mainFrame.newLogin(user.login);
 		mainFrame.showOldMessages(loginDTO.pendingMessages);
 		if (this.user.isAdmin) {
@@ -89,7 +92,7 @@ public class UserManager {
 			enterRoom(newRoom);
 			mainFrame.clearChatArea();
 			mainFrame.newEnterRoom(user.login);
-			mainFrame.updateListConnected(connectedUsers);
+			mainFrame.updateListConnected(getAllUserInRoom());
 		}
 	}
 
@@ -135,7 +138,7 @@ public class UserManager {
 	public void notifyLogin(User user) {
 		connectedUsers.add(user.login);
 		mainFrame.newLogin(user.login);
-		mainFrame.updateListConnected(connectedUsers);
+		mainFrame.updateListConnected(getAllUserInRoom());
 	}
 
 	public void notifyChangeSize(User user, UserSize size) {
@@ -156,17 +159,23 @@ public class UserManager {
 	public void notifyLogout(User user) {
 		connectedUsers.remove(user.login);
 		mainFrame.newLogout(user.login);
-		mainFrame.updateListConnected(connectedUsers);
+		mainFrame.updateListConnected(getAllUserInRoom());
 	}
 
 	public void notifyEnterRoom(User user) {
 		allUsers.put(user.login, user);
+		if(!connectedUsers.contains(user.login))
+			connectedUsers.add(user.login);
 		mainFrame.newEnterRoom(user.login);
+		mainFrame.updateListConnected(getAllUserInRoom());
 	}
 
 	public void notifyLeaveRoom(User user) {
 		allUsers.remove(user.login);
+		if(connectedUsers.contains(user.login))
+			connectedUsers.remove(user.login);
 		mainFrame.newLeaveRoom(user.login);
+		mainFrame.updateListConnected(getAllUserInRoom());
 	}
 
 	public void register() {
@@ -183,6 +192,19 @@ public class UserManager {
 	public User getUserInRoom(String login) {
 		return allUsers.get(login);
 	}
+	
+	public List<String> getAllUserInRoom(){
+		List<String> allUsersInRoom = new ArrayList<String>();
+		for(String connected : connectedUsers){
+			allUsersInRoom.add(connected); 
+		}
+		for(User disconnected : allUsers.values()){
+			if(!connectedUsers.contains(disconnected.login)){
+				allUsersInRoom.add("- " + disconnected.login);
+			}
+		}
+		return allUsersInRoom;
+	}
 
 	private void initializeMainFrame() {
 		this.mainFrame = new MainFrame();
@@ -194,17 +216,21 @@ public class UserManager {
 		System.exit(0);
 	}
 
-	public void showAdminFrame() {
-		AdminFrame adminFrame = new AdminFrame();
-		User[] users = new User[1];
-		users[0] = user;
+	public void showAdminFrame(User[] users, int type) {
+		AdminFrame adminFrame = new AdminFrame(type);
 		adminFrame.initialiseListUser(users);
+		adminFrame.setVisible(true);
+	}
+	
+	public void showAdminFrame(String[] rooms){
+		AdminFrame adminFrame = new AdminFrame(2);
+		adminFrame.initialiseListRoom(rooms);
 		adminFrame.setVisible(true);
 	}
 
 	private void enterRoom(Room newRoom) {
 		room = newRoom;
-		mainFrame.setTitleFrame(room.name());
+		mainFrame.setTitleFrame(room.name() + " - " + user.login);
 		allUsers = new HashMap<String, User>();
 		for (User user : room.allUsers()) {
 			allUsers.put(user.login, user);
@@ -214,7 +240,9 @@ public class UserManager {
 
 	public void kick() {
 		worldManager.logout(user, room);
-		mainFrame.dispose();
+		mainFrame.setVisible(false);
+		NotifyDialog notif = new NotifyDialog(mainFrame, "Vous avez été expulsé par un administrateur");
+		notif.setVisible(true);
 	}
 
 	public void adminKick(User user) {
@@ -224,9 +252,20 @@ public class UserManager {
 
 	public void adminGetConnectedUsers() {
 		User[] connectedUsers = worldManager.adminGetConnectedUsers(user.login, adminPassword);
+		showAdminFrame(connectedUsers, 0);
 	}
 
 	public void adminGetAllUsers() {
 		User[] allUsers = worldManager.adminGetAllUsers(user.login, adminPassword);
+		showAdminFrame(allUsers, 1);
+	}
+	
+	public void adminGetAllRoomNames(){
+		String[] allRooms = worldManager.adminGetAllRooms(user.login, adminPassword);
+		showAdminFrame(allRooms);
+	}
+	
+	public void adminInitSystem(){
+		worldManager.adminInitialize(user.login, adminPassword);
 	}
 }

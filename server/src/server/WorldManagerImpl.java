@@ -15,6 +15,7 @@ import interfaces.UserSize;
 import interfaces.WorldManagerPOA;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -151,6 +152,21 @@ public class WorldManagerImpl extends WorldManagerPOA {
 			ServerUtils.reinitializeDb();
 		} else {
 			System.out.println("Error : User " + login + " is not admin");
+		}
+	}
+
+	@Override
+	public String[] adminGetAllRooms(String adminLogin, String adminPassword) {
+		if (UserDao.isAdmin(adminLogin, adminPassword)) {
+			Collection<RoomImpl> roomsImpls = rooms.values();
+			List<String> names = new ArrayList<String>();
+			for(RoomImpl room : roomsImpls){
+				names.add(room.name());
+			}
+			return names.toArray(new String[names.size()]);
+		} else {
+			System.out.println("Error : User " + adminLogin + " is not admin");
+			return new String[0];
 		}
 	}
 }
